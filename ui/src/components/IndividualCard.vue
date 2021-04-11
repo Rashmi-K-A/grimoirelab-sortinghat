@@ -8,6 +8,7 @@
       highlighted: isHighlighted
     }"
     raised
+    hover
     v-on="$listeners"
     @drop.native.prevent.stop="onDrop($event)"
     @dragover.prevent.stop="isDropZone($event, true)"
@@ -15,56 +16,64 @@
     @dragleave="isDropZone($event, false)"
     @click="selectIndividual"
   >
-    <v-list-item class="grow" three-line>
-      <avatar :name="name" :email="email" :size="30" />
-
+    <v-list-item class="grow" two-line>
       <v-list-item-content>
-        <v-list-item-title class="font-weight-medium">
+        <v-list-item-title class="font-weight-medium mb-1">
           {{ name || email }}
-          <v-icon v-if="isLocked" small right class="mb-1">mdi-lock</v-icon>
         </v-list-item-title>
         <v-list-item-subtitle v-if="enrollments && enrollments.length > 0">
           {{ enrollments[0].organization.name }}
         </v-list-item-subtitle>
-        <v-list-item-subtitle>
-          <v-tooltip
-            v-for="source in sources"
-            :key="source.name"
-            bottom
-            transition="expand-y-transition"
-            open-delay="300"
-          >
-            <template v-slot:activator="{ on }">
-              <v-icon v-on="on" v-text="source.icon" small left />
-            </template>
-            <span>{{ source.name }}</span>
-          </v-tooltip>
-        </v-list-item-subtitle>
       </v-list-item-content>
-
-      <v-list-item-icon>
-        <v-menu offset-y offset-x :close-on-content-click="false">
-          <template v-slot:activator="{ on }">
-            <v-btn icon v-on="on" @mousedown.stop>
-              <v-icon small>
-                mdi-magnify-plus-outline
-              </v-icon>
-            </v-btn>
-          </template>
-          <expanded-individual
-            compact
-            :enrollments="enrollments"
-            :identities="identities"
-            :uuid="uuid"
-          />
-        </v-menu>
-        <v-btn text icon @click.stop="$emit('remove')" @mousedown.stop>
-          <v-icon small>
-            mdi-close
-          </v-icon>
-        </v-btn>
-      </v-list-item-icon>
+      <v-icon v-if="isLocked" small class="mb-1">mdi-lock</v-icon>
+      <avatar :name="name" :email="email" :size="50" />
     </v-list-item>
+
+    <v-card-actions>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-subtitle>
+            <v-tooltip
+              v-for="source in sources"
+              :key="source.name"
+              bottom
+              transition="expand-y-transition"
+              open-delay="300"
+            >
+              <template v-slot:activator="{ on }">
+                <v-icon v-on="on" v-text="source.icon" small left />
+              </template>
+              <span>{{ source.name }}</span>
+            </v-tooltip>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+        <v-row
+          align="center"
+          justify="end"
+        >
+          <v-menu offset-y offset-x :close-on-content-click="false">
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on" @mousedown.stop>
+                <v-icon dense>
+                  mdi-magnify-plus-outline
+                </v-icon>
+              </v-btn>
+            </template>
+            <expanded-individual
+              compact
+              :enrollments="enrollments"
+              :identities="identities"
+              :uuid="uuid"
+            />
+          </v-menu>
+          <v-btn text icon @click.stop="$emit('remove')" @mousedown.stop>
+            <v-icon dense>
+              mdi-close
+            </v-icon>
+          </v-btn>
+        </v-row>
+      </v-list-item>
+    </v-card-actions>
     <slot />
   </v-card>
 </template>
