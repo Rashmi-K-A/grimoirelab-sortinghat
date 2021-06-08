@@ -1,0 +1,4 @@
+
+        [console_scripts]
+        sortinghat=sortinghat.cli.sortinghat:sortinghat
+      

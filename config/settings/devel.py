@@ -103,8 +103,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'root',
-        'PASSWORD': '',
-        'NAME': 'sortinghat_db',
+        'PASSWORD': 'rootroot',
+        'NAME': 'new2',
         'OPTIONS': {'charset': 'utf8mb4'},
         'TEST': {
             'NAME': 'testhat',

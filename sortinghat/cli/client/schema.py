@@ -147,6 +147,11 @@ class AddOrganization(sgqlc.types.Type):
     __field_names__ = ('organization',)
     organization = sgqlc.types.Field('OrganizationType', graphql_name='organization')
 
+class AddGroup(sgqlc.types.Type):
+  __schema__ = sh_schema
+  __field_names__ = ('group',)
+  organization = sgqlc.types.Field('GroupType', graphql_name='group')
+
 
 class Affiliate(sgqlc.types.Type):
     __schema__ = sh_schema
@@ -456,9 +461,15 @@ class Refresh(sgqlc.types.Type):
 
 class SortingHatMutation(sgqlc.types.Type):
     __schema__ = sh_schema
-    __field_names__ = ('add_organization', 'delete_organization', 'add_domain', 'delete_domain', 'add_identity', 'delete_identity', 'update_profile', 'move_identity', 'lock', 'unlock', 'merge', 'unmerge_identities', 'enroll', 'withdraw', 'update_enrollment', 'recommend_affiliations', 'recommend_matches', 'affiliate', 'unify', 'token_auth', 'verify_token', 'refresh_token')
+    __field_names__ = ('add_organization', 'add_group','delete_organization', 'add_domain', 'delete_domain', 'add_identity', 'delete_identity', 'update_profile', 'move_identity', 'lock', 'unlock', 'merge', 'unmerge_identities', 'enroll', 'withdraw', 'update_enrollment', 'recommend_affiliations', 'recommend_matches', 'affiliate', 'unify', 'token_auth', 'verify_token', 'refresh_token')
     add_organization = sgqlc.types.Field(
         AddOrganization, graphql_name='addOrganization', args=sgqlc.types.ArgDict((
+            ('name', sgqlc.types.Arg(String, graphql_name='name', default=None)),
+        ))
+    )
+
+    add_group = sgqlc.types.Field(
+        AddGroup, graphql_name='addGroup', args=sgqlc.types.ArgDict((
             ('name', sgqlc.types.Arg(String, graphql_name='name', default=None)),
         ))
     )

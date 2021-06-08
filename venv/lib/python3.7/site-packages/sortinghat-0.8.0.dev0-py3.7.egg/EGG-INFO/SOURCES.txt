@@ -1,0 +1,11 @@
+MANIFEST.in
+NEWS
+README.md
+setup.cfg
+setup.py
+sortinghat.egg-info/PKG-INFO
+sortinghat.egg-info/SOURCES.txt
+sortinghat.egg-info/dependency_links.txt
+sortinghat.egg-info/entry_points.txt
+sortinghat.egg-info/not-zip-safe
+sortinghat.egg-info/top_level.txt

@@ -36,6 +36,7 @@ from .models import (MIN_PERIOD_DATE,
                      Organization,
                      Domain,
                      Country,
+Group,
                      Individual,
                      Identity,
                      Profile,
@@ -201,6 +202,27 @@ def search_enrollments_in_period(mk, org_name,
                                      start__lte=to_date, end__gte=from_date).order_by('start')
 
 
+def add_group(trxl, organization, _parent, name):
+  # Setting operation arguments before they are modified
+  op_args = {
+    'name': name
+  }
+
+  validate_field('name', name)
+  try:
+      parent_node = getattr(organization,'group')
+      # tree = Group.get_tree(parent=getattr(organization, 'group'))
+      parent_node.add_child(name=name)
+  except django.db.utils.IntegrityError as exc:
+    _handle_integrity_error(Organization, exc)
+
+  trxl.log_operation(op_type=Operation.OpType.ADD, entity_type='group',
+                     timestamp=datetime_utcnow(), args=op_args,
+                     target=op_args['name'])
+
+  return group
+
+
 def add_organization(trxl, name):
     """Add an organization to the database.
 
@@ -226,9 +248,11 @@ def add_organization(trxl, name):
 
     validate_field('name', name)
 
-    organization = Organization(name=name)
 
     try:
+        group = Group.add_root(name=name)
+        group.save()
+        organization = Organization(name=name, group=group)
         organization.save()
     except django.db.utils.IntegrityError as exc:
         _handle_integrity_error(Organization, exc)

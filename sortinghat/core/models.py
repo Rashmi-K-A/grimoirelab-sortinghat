@@ -39,6 +39,7 @@ from django_mysql.models import JSONField
 from enum import Enum
 
 from grimoirelab_toolkit.datetime import datetime_utcnow
+from treebeard.mp_tree import MP_Node
 
 # Default dates for periods
 MIN_PERIOD_DATE = datetime.datetime(1900, 1, 1, 0, 0, 0,
@@ -132,8 +133,19 @@ class Operation(Model):
         return '%s - %s - %s - %s - %s' % (self.ouid, self.trx, self.op_type, self.entity_type, self.target)
 
 
+class Group(MP_Node, EntityBase):
+  name = CharField(max_length=MAX_SIZE_CHAR_INDEX)
+
+  class Meta:
+    db_table = 'groups_orgs'
+    unique_together = ('name',)
+
+  def __str__(self):
+    return self.name
+
 class Organization(EntityBase):
     name = CharField(max_length=MAX_SIZE_CHAR_INDEX)
+    group = ForeignKey(Group, related_name='organizations', on_delete=CASCADE, default=None)
 
     class Meta:
         db_table = 'organizations'

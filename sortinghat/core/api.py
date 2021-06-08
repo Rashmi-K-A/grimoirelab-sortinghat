@@ -32,6 +32,7 @@ from .db import (find_individual_by_uuid,
                  find_domain,
                  search_enrollments_in_period,
                  add_individual as add_individual_db,
+                 add_group as add_group_db,
                  add_identity as add_identity_db,
                  add_organization as add_organization_db,
                  add_domain as add_domain_db,
@@ -469,6 +470,37 @@ def add_organization(ctx, name):
 
     return org
 
+@django.db.transaction.atomic
+def add_group(ctx, organization, name):
+  if organization is None:
+    raise InvalidValueError(msg="'org_name' cannot be None")
+  if organization == '':
+    raise InvalidValueError(msg="'org_name' cannot be an empty string")
+  if name is None:
+    raise InvalidValueError(msg="'domain_name' cannot be None")
+  if name == '':
+    raise InvalidValueError(msg="'domain_name' cannot be an empty string")
+
+  trxl = TransactionsLog.open('add_group', ctx)
+
+  try:
+    organization = find_organization(organization)
+  except ValueError as e:
+    raise InvalidValueError(msg=str(e))
+  except NotFoundError as exc:
+    raise exc
+
+  try:
+    group = add_group_db(trxl, organization=organization,
+                           name=name)
+  except ValueError as e:
+    raise InvalidValueError(msg=str(e))
+  except AlreadyExistsError as exc:
+    raise exc
+
+  trxl.close()
+
+  return group
 
 @django.db.transaction.atomic
 def add_domain(ctx, organization, domain_name, is_top_domain=True):
