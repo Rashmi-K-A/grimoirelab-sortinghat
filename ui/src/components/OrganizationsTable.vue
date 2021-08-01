@@ -54,7 +54,7 @@
         />
       </template>
       <template v-slot:expanded-item="{ item }">
-        <expanded-organization :domains="item.domains" />
+        <expanded-organization :organization="item.name" :domains="item.domains" :teams="item.teams"/>
       </template>
     </v-data-table>
 

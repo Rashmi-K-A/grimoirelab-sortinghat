@@ -161,6 +161,9 @@ const GET_PAGINATED_ORGANIZATIONS = gql`
         domains {
           domain
         }
+        teams {
+          name
+        }
       }
       pageInfo {
         page
@@ -178,6 +181,26 @@ const GET_COUNTRIES = gql`
       entities {
         code
         name
+      }
+    }
+  }
+`;
+
+const GET_PAGINATED_TEAMS = gql`
+  query GetTeams(
+    $page: Int!
+    $pageSize: Int!
+    $filters: TeamFilterType
+  ) {
+    teams(page: $page, pageSize: $pageSize, filters: $filters) {
+      entities {
+        name
+      }
+      pageInfo {
+        page
+        pageSize
+        numPages
+        totalResults
       }
     }
   }
@@ -298,6 +321,19 @@ const getJobs = (apollo, page, pageSize) => {
   return response;
 };
 
+const getPaginatedTeams = (apollo, currentPage, pageSize, filters) => {
+  let response = apollo.query({
+    query: GET_PAGINATED_TEAMS,
+    variables: {
+      page: currentPage,
+      pageSize: pageSize,
+      filters: filters
+    },
+    fetchPolicy: "no-cache"
+  });
+  return response;
+};
+
 export {
   getCountries,
   getIndividuals,
@@ -305,5 +341,6 @@ export {
   getProfileByUuid,
   getPaginatedIndividuals,
   getPaginatedOrganizations,
+  getPaginatedTeams,
   getJobs
 };

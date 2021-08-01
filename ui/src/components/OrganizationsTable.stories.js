@@ -82,7 +82,8 @@ export const Default = () => ({
                   { id: 4 },
                   { id: 5 }
                 ],
-                domains: [{ domain: "griffyndor.hogwarts.edu" }]
+                domains: [{ domain: "griffyndor.hogwarts.edu" }],
+                teams: [{team: "Prefects"}]
               },
               {
                 id: 2,
