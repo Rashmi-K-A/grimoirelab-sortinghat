@@ -56,6 +56,7 @@
         @updateWorkspace="updateWorkspace"
         ref="organizations"
       />
+      />
     </v-row>
     <v-snackbar v-model="snackbar">
       Individual already in work space

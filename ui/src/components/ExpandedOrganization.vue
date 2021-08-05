@@ -8,12 +8,12 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-subheader>Teams ({{ teams.length }})  -
+    <v-subheader>Teams  -
       <v-btn depressed small height="34" @click.stop="openModal" text>
         View all
       </v-btn>
     </v-subheader>
-    <team-modal :is-open.sync="modal.open" :teams="teams" :organization="organization"/>
+    <team-modal :is-open.sync="modal.open" :organization="organization"/>
   </td>
 </template>
 
@@ -29,10 +29,6 @@ export default {
     domains: {
       type: Array,
       required: true
-    },
-    teams: {
-        type: Array,
-        required: true
     },
     organization: {
         type: String,

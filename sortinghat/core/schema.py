@@ -175,8 +175,13 @@ class OrganizationType(DjangoObjectType):
 
 
 class TeamType(DjangoObjectType):
-    class Meta:
-        model = Team
+  class Meta:
+    model = Team
+
+  subteams = graphene.List(lambda: TeamType)
+
+  def resolve_subteams(self, info):
+    return self.get_children().order_by('name').all()
 
 
 class DomainType(DjangoObjectType):
@@ -1073,29 +1078,34 @@ class SortingHatQuery:
     @check_auth
     def resolve_teams(self, info, filters=None, page=1,
                       page_size=settings.DEFAULT_GRAPHQL_PAGE_SIZE, **kwargs):
+      query = Team.get_root_nodes().order_by('name')
+      if filters:
         query = Team.objects.order_by('name')
+        if 'organization' not in filters and 'parent' in filters:
+          query = query.filter(organization=None)
+          query = query.filter(name=filters['parent'])
+          if query:
+            query = query.first().get_children()
 
-        if filters:
-            if 'name' in filters:
-                query = query.filter(name=filters['name'])
-            if 'term' in filters:
-                search_term = filters['term']
-                query = query.filter(Q(name__icontains=search_term))
-            if 'organization' in filters:
-                org_search_term = filters['organization']
-                query = query.filter(Q(organization__in=Organization.objects.filter(name__icontains=org_search_term)))
-                if 'parent' in filters:
-                    query = query.filter(name=filters['parent'])
-                    if query:
-                        query = query.first().get_descendants()
-            else:
-                if 'parent' in filters:
-                    query = query.filter(name=filters['parent'], organization=None)
-                    if query:
-                        query = query.first().get_descendants()
+        if 'organization' in filters and 'parent' not in filters:
+          if not ('name' in filters or 'term' in filters):
+            query = Team.get_root_nodes().order_by('name')
+          query = query.filter(
+            Q(organization__in=Organization.objects.filter(name=filters['organization'])))
 
-        return TeamPaginatedType.create_paginated_result(query, page,
-                                                         page_size=page_size)
+        if 'organization' in filters and 'parent' in filters:
+          query = query.filter(
+            Q(organization__in=Organization.objects.filter(name=filters['organization'])))
+          query = query.filter(name=filters['parent'])
+          if query:
+            query = query.first().get_children()
+
+        if 'name' in filters:
+          query = query.filter(name=filters['name'])
+        if 'term' in filters:
+          query = query.filter(name__icontains=filters['term'])
+      return TeamPaginatedType.create_paginated_result(query, page,
+                                                       page_size=page_size)
 
     @check_auth
     def resolve_individuals(self, info, filters=None,
