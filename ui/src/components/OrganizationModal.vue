@@ -2,9 +2,7 @@
   <v-dialog v-model="isOpen" persistent max-width="400px">
     <v-card class="section">
       <v-card-title class="header">
-        <span class="title">
-          {{ organization ? "Edit" : "Add" }} organization
-        </span>
+        <span class="title"> {{ organization ? 'Edit' : 'Add' }} organization </span>
       </v-card-title>
       <form>
         <v-card-text>
@@ -69,46 +67,46 @@
 
 <script>
 export default {
-  name: "OrganizationModal",
+  name: 'OrganizationModal',
   props: {
     addDomain: {
       type: Function,
-      required: true
+      required: true,
     },
     deleteDomain: {
       type: Function,
-      required: true
+      required: true,
     },
     addOrganization: {
       type: Function,
-      required: true
+      required: true,
     },
     isOpen: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     organization: {
       type: String,
-      required: false
+      required: false,
     },
     domains: {
       type: Array,
       required: false,
-      default: () => [""]
-    }
+      default: () => [''],
+    },
   },
   data() {
     return {
       form: {
-        name: "",
-        domains: [""]
+        name: '',
+        domains: [''],
       },
-      errorMessage: "",
+      errorMessage: '',
       savedData: {
         name: undefined,
-        domains: []
-      }
+        domains: [],
+      },
     };
   },
   methods: {
@@ -122,12 +120,9 @@ export default {
           if (response && !response.error) {
             this.savedData.name = this.form.name;
             this.$logger.debug(`Added organization ${this.form.name}`);
-            if (
-              this.form.domains.length === 0 &&
-              this.savedData.domains.length === 0
-            ) {
+            if (this.form.domains.length === 0 && this.savedData.domains.length === 0) {
               this.closeModal();
-              this.$emit("updateOrganizations");
+              this.$emit('updateOrganizations');
               return;
             } else {
               this.handleDomains();
@@ -141,35 +136,33 @@ export default {
       }
     },
     closeModal() {
-      this.errorMessage = "";
-      this.$emit("update:isOpen", false);
+      this.errorMessage = '';
+      this.$emit('update:isOpen', false);
     },
     async handleDomains() {
       const newDomains = this.form.domains.filter(
-        domain => domain.length > 0 && !this.savedData.domains.includes(domain)
+        (domain) => domain.length > 0 && !this.savedData.domains.includes(domain),
       );
       const deletedDomains = this.savedData.domains.filter(
-        domain => domain.length > 0 && !this.form.domains.includes(domain)
+        (domain) => domain.length > 0 && !this.form.domains.includes(domain),
       );
       try {
         const responseNew = await Promise.all(
-          newDomains.map(domain =>
-            this.addOrganizationDomain(domain, this.form.name)
-          )
+          newDomains.map((domain) => this.addOrganizationDomain(domain, this.form.name)),
         );
         const responseDeleted = await Promise.all(
-          deletedDomains.map(domain => this.deleteOrganizationDomain(domain))
+          deletedDomains.map((domain) => this.deleteOrganizationDomain(domain)),
         );
         if (responseNew || responseDeleted) {
           this.closeModal();
-          this.$emit("updateOrganizations");
+          this.$emit('updateOrganizations');
         }
       } catch (error) {
         this.errorMessage = this.$getErrorMessage(error);
         this.$logger.error(`Error updating domains: ${error}`, {
           organization: this.form.name,
           newDomains,
-          deletedDomains
+          deletedDomains,
         });
       }
     },
@@ -177,13 +170,13 @@ export default {
       const response = await this.addDomain(domain, organization);
       if (response && !response.error) {
         this.savedData.domains.push(domain);
-        this.$logger.debug("Added domain", { domain, organization });
+        this.$logger.debug('Added domain', { domain, organization });
         return response;
       } else if (response.errors) {
-        this.$logger.error(
-          `Error adding domain: ${response.errors[0].message}`,
-          { domain, organization }
-        );
+        this.$logger.error(`Error adding domain: ${response.errors[0].message}`, {
+          domain,
+          organization,
+        });
       }
     },
     async deleteOrganizationDomain(domain) {
@@ -194,25 +187,25 @@ export default {
       }
     },
     addInput() {
-      this.form.domains.push("");
-    }
+      this.form.domains.push('');
+    },
   },
   watch: {
     isOpen(value) {
       if (value) {
         Object.assign(this.savedData, {
           name: this.organization,
-          domains: this.domains.map(domain => domain)
+          domains: this.domains.map((domain) => domain),
         });
         Object.assign(this.form, {
-          name: this.organization || "",
-          domains: this.domains.map(domain => domain)
+          name: this.organization || '',
+          domains: this.domains.map((domain) => domain),
         });
       } else {
-        Object.assign(this.form, { name: "", domains: [""] });
-        Object.assign(this.savedData, { name: undefined, domains: [""] });
+        Object.assign(this.form, { name: '', domains: [''] });
+        Object.assign(this.savedData, { name: undefined, domains: [''] });
       }
-    }
-  }
+    },
+  },
 };
 </script>

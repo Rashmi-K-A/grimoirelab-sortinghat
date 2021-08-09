@@ -1,8 +1,8 @@
-import Identity from "./Identity.vue";
+import Identity from './Identity.vue';
 
 export default {
-  title: "Identity",
-  excludeStories: /.*Data$/
+  title: 'Identity',
+  excludeStories: /.*Data$/,
 };
 
 const identityTemplate =
@@ -13,21 +13,21 @@ export const Default = () => ({
   template: identityTemplate,
   props: {
     uuid: {
-      default: "1f1a9e56dedb45f5969413eeb4442d982e33f0f6"
+      default: '1f1a9e56dedb45f5969413eeb4442d982e33f0f6',
     },
     name: {
-      default: "Tom Marvolo Riddle"
+      default: 'Tom Marvolo Riddle',
     },
     email: {
-      default: "triddle@example.net"
+      default: 'triddle@example.net',
     },
     username: {
-      default: "triddle"
+      default: 'triddle',
     },
     source: {
-      default: null
-    }
-  }
+      default: null,
+    },
+  },
 });
 
 export const Source = () => ({
@@ -35,19 +35,19 @@ export const Source = () => ({
   template: identityTemplate,
   props: {
     uuid: {
-      default: "1f1a9e56dedb45f5969413eeb4442d982e33f0f6"
+      default: '1f1a9e56dedb45f5969413eeb4442d982e33f0f6',
     },
     name: {
-      default: "Tom Marvolo Riddle"
+      default: 'Tom Marvolo Riddle',
     },
     email: {
-      default: "triddle@example.net"
+      default: 'triddle@example.net',
     },
     username: {
-      default: "triddle"
+      default: 'triddle',
     },
     source: {
-      default: "github"
-    }
-  }
+      default: 'github',
+    },
+  },
 });

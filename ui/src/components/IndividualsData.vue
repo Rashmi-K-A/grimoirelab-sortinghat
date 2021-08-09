@@ -3,22 +3,22 @@
 </template>
 
 <script>
-import IndividualsGrid from "./IndividualsGrid.vue";
+import IndividualsGrid from './IndividualsGrid.vue';
 export default {
-  name: "individualsdata",
+  name: 'individualsdata',
   components: {
-    IndividualsGrid
+    IndividualsGrid,
   },
   data: () => ({
     individuals: {
-      entities: []
-    }
+      entities: [],
+    },
   }),
   props: {
     getindividuals: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   async created() {
     let response = await this.getindividuals.query(this.$apollo, 50);
@@ -41,13 +41,13 @@ export default {
           if (response) {
             this.individuals.entities = [
               ...this.individuals.entities,
-              ...response.data.individuals.entities
+              ...response.data.individuals.entities,
             ];
           }
         }
       };
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

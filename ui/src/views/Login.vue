@@ -18,13 +18,7 @@
           <v-alert v-if="errorMessage" text type="error">
             {{ errorMessage }}
           </v-alert>
-          <v-btn
-            depressed
-            block
-            color="primary"
-            :disabled="disableSubmit"
-            @click.prevent="submit"
-          >
+          <v-btn depressed block color="primary" :disabled="disableSubmit" @click.prevent="submit">
             Log in
           </v-btn>
         </v-form>
@@ -34,39 +28,39 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
 export default {
-  name: "Login",
+  name: 'Login',
   data: () => ({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
     showPassword: false,
-    errorMessage: ""
+    errorMessage: '',
   }),
   computed: {
     disableSubmit() {
       return this.username.length < 3 || this.password.length < 3;
-    }
+    },
   },
   methods: {
-    ...mapActions(["login"]),
+    ...mapActions(['login']),
     async submit() {
       try {
         const authDetails = {
           apollo: this.$apollo,
           username: this.username,
-          password: this.password
+          password: this.password,
         };
         const response = await this.login(authDetails);
         if (response) {
-          this.$router.push("/");
+          this.$router.push('/');
           this.$logger.info(`Log in user ${this.username}`);
         }
       } catch (error) {
         this.errorMessage = this.$getErrorMessage(error);
         this.$logger.error(`Error logging in user ${this.username}: ${error}`);
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -21,11 +21,7 @@
     </v-row>
 
     <v-row class="actions">
-      <search
-        class="mr-3 pa-0 flex-grow-0"
-        :valid-filters="[]"
-        @search="filterSearch"
-      />
+      <search class="mr-3 pa-0 flex-grow-0" :valid-filters="[]" @search="filterSearch" />
     </v-row>
 
     <v-data-table
@@ -54,7 +50,13 @@
         />
       </template>
       <template v-slot:expanded-item="{ item }">
-        <expanded-organization :organization="item.name" :domains="item.domains"/>
+        <expanded-organization
+          :organization="item.name"
+          :domains="item.domains"
+          :add-team="addTeam"
+          :delete-team="deleteTeam"
+          :fetch-teams="fetchTeams"
+        />
       </template>
     </v-data-table>
 
@@ -95,11 +97,7 @@
             <h6 class="subheader">Enrollment dates (optional)</h6>
             <v-row>
               <v-col cols="6">
-                <date-input
-                  v-model="dialog.dateFrom"
-                  label="Date from"
-                  outlined
-                />
+                <date-input v-model="dialog.dateFrom" label="Date from" outlined />
               </v-col>
               <v-col cols="6">
                 <date-input v-model="dialog.dateTo" label="Date to" outlined />
@@ -137,77 +135,85 @@
 </template>
 
 <script>
-import { formatIndividuals } from "../utils/actions";
-import DateInput from "./DateInput.vue";
-import ExpandedOrganization from "./ExpandedOrganization.vue";
-import OrganizationEntry from "./OrganizationEntry.vue";
-import OrganizationModal from "./OrganizationModal.vue";
-import Search from "./Search.vue";
+import { formatIndividuals } from '../utils/actions';
+import DateInput from './DateInput.vue';
+import ExpandedOrganization from './ExpandedOrganization.vue';
+import OrganizationEntry from './OrganizationEntry.vue';
+import OrganizationModal from './OrganizationModal.vue';
+import Search from './Search.vue';
 
 export default {
-  name: "OrganizationsTable",
+  name: 'OrganizationsTable',
   components: {
     DateInput,
     OrganizationEntry,
     ExpandedOrganization,
     OrganizationModal,
-    Search
+    Search,
   },
   props: {
     enroll: {
       type: Function,
-      required: true
+      required: true,
     },
     fetchPage: {
       type: Function,
-      required: true
+      required: true,
+    },
+    fetchTeams: {
+      type: Function,
+      required: true,
     },
     addOrganization: {
       type: Function,
-      required: true
+      required: true,
     },
     deleteOrganization: {
       type: Function,
-      required: true
+      required: true,
+    },
+    addTeam: {
+      type: Function,
+      required: true,
+    },
+    deleteTeam: {
+      type: Function,
+      required: true,
     },
     addDomain: {
       type: Function,
-      required: true
+      required: true,
     },
     deleteDomain: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      headers: [
-        { value: "name" },
-        { value: "enrollments" },
-        { value: "actions" }
-      ],
+      headers: [{ value: 'name' }, { value: 'enrollments' }, { value: 'actions' }],
       expandedItems: [],
       organizations: [],
       pageCount: 0,
       page: 0,
       dialog: {
         open: false,
-        title: "",
-        text: "",
-        action: "",
+        title: '',
+        text: '',
+        action: '',
         showDates: false,
         dateFrom: null,
-        dateTo: null
+        dateTo: null,
       },
       modal: {
         open: false,
         organization: undefined,
-        domains: []
+        domains: [],
       },
-      selectedOrganization: "",
+      selectedOrganization: '',
       filters: {},
       totalResults: 0,
-      itemsPerPage: 10
+      itemsPerPage: 10,
     };
   },
   created() {
@@ -234,65 +240,63 @@ export default {
             event.uuids,
             event.organization,
             this.dialog.dateFrom,
-            this.dialog.dateTo
-          )
+            this.dialog.dateTo,
+          ),
       });
     },
     async enrollIndividuals(uuids, organization, dateFrom, dateTo) {
       this.closeDialog();
       try {
         const response = await Promise.all(
-          uuids.map(individual =>
-            this.enroll(individual, organization, dateFrom, dateTo)
-          )
+          uuids.map((individual) => this.enroll(individual, organization, dateFrom, dateTo)),
         );
         if (response) {
           this.getOrganizations(this.page);
-          response.forEach(res => {
-            this.$emit("updateWorkspace", {
-              update: formatIndividuals([res.data.enroll.individual])
+          response.forEach((res) => {
+            this.$emit('updateWorkspace', {
+              update: formatIndividuals([res.data.enroll.individual]),
             });
           });
-          this.$emit("updateIndividuals");
-          this.$logger.debug("Enrolled individuals", {
+          this.$emit('updateIndividuals');
+          this.$logger.debug('Enrolled individuals', {
             organization,
             uuids,
             dateFrom,
-            dateTo
+            dateTo,
           });
         }
       } catch (error) {
         Object.assign(this.dialog, {
           open: true,
-          title: "Error",
+          title: 'Error',
           text: this.$getErrorMessage(error),
-          action: null
+          action: null,
         });
         this.$logger.error(`Error enrolling individuals: ${error}`, {
           organization,
           uuids,
           dateFrom,
-          dateTo
+          dateTo,
         });
       }
     },
     openModal(organization) {
       const domains =
         organization.domains && organization.domains.length > 0
-          ? organization.domains.map(domain => domain.domain)
-          : [""];
+          ? organization.domains.map((domain) => domain.domain)
+          : [''];
       Object.assign(this.modal, {
         open: true,
-        organization: organization ? organization.name : "",
-        domains: domains
+        organization: organization ? organization.name : '',
+        domains: domains,
       });
     },
     confirmDelete(organization) {
       Object.assign(this.dialog, {
         open: true,
-        title: "Delete this organization?",
+        title: 'Delete this organization?',
         text: organization,
-        action: () => this.deleteOrg(organization)
+        action: () => this.deleteOrg(organization),
       });
     },
     async deleteOrg(organization) {
@@ -301,27 +305,25 @@ export default {
         const response = await this.deleteOrganization(organization);
         if (response) {
           this.getOrganizations(this.page);
-          this.$emit("updateIndividuals");
+          this.$emit('updateIndividuals');
           this.$logger.debug(`Deleted organization ${organization}`);
         }
       } catch (error) {
         Object.assign(this.dialog, {
           open: true,
-          title: "Error",
+          title: 'Error',
           text: this.$getErrorMessage(error),
-          action: null
+          action: null,
         });
-        this.$logger.error(
-          `Error deleting organization ${organization}: ${error}`
-        );
+        this.$logger.error(`Error deleting organization ${organization}: ${error}`);
       }
     },
     startDrag(item, event) {
       this.selectedOrganization = item.name;
-      event.dataTransfer.dropEffect = "move";
-      event.dataTransfer.setData("type", "enrollFromOrganization");
-      event.dataTransfer.setData("organization", item.name);
-      const dragImage = document.querySelector(".dragged-organization");
+      event.dataTransfer.dropEffect = 'move';
+      event.dataTransfer.setData('type', 'enrollFromOrganization');
+      event.dataTransfer.setData('organization', item.name);
+      const dragImage = document.querySelector('.dragged-organization');
       event.dataTransfer.setDragImage(dragImage, 0, 0);
     },
     filterSearch(filters) {
@@ -337,19 +339,19 @@ export default {
     closeDialog() {
       Object.assign(this.dialog, {
         open: false,
-        title: "",
-        text: "",
-        action: "",
+        title: '',
+        text: '',
+        action: '',
         showDates: false,
         dateFrom: null,
-        dateTo: null
+        dateTo: null,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-@import "../styles/index.scss";
+@import '../styles/index.scss';
 .actions {
   align-items: baseline;
   justify-content: space-between;

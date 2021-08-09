@@ -5,7 +5,7 @@
       expanded: isExpanded,
       selected: isSelected,
       dropzone: isDropZone,
-      highlighted: isHighlighted
+      highlighted: isHighlighted,
     }"
     @click.prevent="selectEntry"
     @dblclick="onDoubleClick"
@@ -51,13 +51,7 @@
                 >
                   mdi-robot
                 </v-icon>
-                <v-icon
-                  v-show="isLocked && isBot"
-                  v-on="on"
-                  class="aligned"
-                  small
-                  right
-                >
+                <v-icon v-show="isLocked && isBot" v-on="on" class="aligned" small right>
                   mdi-robot
                 </v-icon>
               </template>
@@ -77,7 +71,7 @@
                   mdi-lock
                 </v-icon>
               </template>
-              <span>{{ isLocked ? "Unlock profile" : "Lock profile" }}</span>
+              <span>{{ isLocked ? 'Unlock profile' : 'Lock profile' }}</span>
             </v-tooltip>
           </v-list-item-title>
           <v-list-item-subtitle>{{ organization }}</v-list-item-subtitle>
@@ -121,7 +115,7 @@
     <td width="140">
       <v-btn icon @click.stop="$emit('expand')">
         <v-icon>
-          {{ isExpanded ? "mdi-chevron-up" : "mdi-chevron-down" }}
+          {{ isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
         </v-icon>
       </v-btn>
       <v-menu right nudge-right="35">
@@ -133,7 +127,7 @@
         <v-list>
           <v-list-item @click="$emit('select', $event)">
             <v-list-item-title>
-              {{ isSelected ? "Deselect individual" : "Select individual" }}
+              {{ isSelected ? 'Deselect individual' : 'Select individual' }}
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="$emit('saveIndividual', $event)">
@@ -154,70 +148,70 @@
   </tr>
 </template>
 <script>
-import Avatar from "./Avatar.vue";
+import Avatar from './Avatar.vue';
 export default {
-  name: "IndividualEntry",
+  name: 'IndividualEntry',
   components: {
-    Avatar
+    Avatar,
   },
   props: {
     name: {
       type: String,
-      required: false
+      required: false,
     },
     organization: {
       type: String,
-      required: false
+      required: false,
     },
     email: {
       type: String,
-      required: false
+      required: false,
     },
     sources: {
       type: Array,
-      required: false
+      required: false,
     },
     uuid: {
       type: String,
-      required: true
+      required: true,
     },
     isExpanded: {
       type: Boolean,
-      required: true
+      required: true,
     },
     isLocked: {
       type: Boolean,
-      required: true
+      required: true,
     },
     isBot: {
       type: Boolean,
-      required: true
+      required: true,
     },
     isSelected: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     isHighlighted: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       isDragging: false,
       form: {
         name: this.name,
-        email: this.email
+        email: this.email,
       },
-      timeout: null
+      timeout: null,
     };
   },
   computed: {
     isDropZone: function() {
       return this.isDragging && !this.isLocked;
-    }
+    },
   },
   methods: {
     selectEntry() {
@@ -225,7 +219,7 @@ export default {
       if (!this.timeout) {
         this.timeout = window.setTimeout(() => {
           this.timeout = null;
-          this.$emit("select");
+          this.$emit('select');
         }, delay);
       }
     },
@@ -238,43 +232,41 @@ export default {
       if (this.isLocked) {
         return;
       }
-      const type = event.dataTransfer.getData("type");
-      if (type === "move") {
+      const type = event.dataTransfer.getData('type');
+      if (type === 'move') {
         this.moveIndividual(event);
-      } else if (type === "enrollFromOrganization") {
+      } else if (type === 'enrollFromOrganization') {
         this.enrollIndividual(event);
       } else {
         this.mergeIndividuals(event);
       }
     },
     mergeIndividuals(event) {
-      const droppedIndividuals = JSON.parse(
-        event.dataTransfer.getData("individuals")
-      );
+      const droppedIndividuals = JSON.parse(event.dataTransfer.getData('individuals'));
       this.$emit(
-        "merge",
+        'merge',
         droppedIndividuals
-          .filter(individual => !individual.isLocked)
-          .map(individual => individual.uuid)
+          .filter((individual) => !individual.isLocked)
+          .map((individual) => individual.uuid),
       );
     },
     moveIndividual(event) {
-      const uuid = event.dataTransfer.getData("uuid");
-      this.$emit("move", { fromUuid: uuid, toUuid: this.uuid });
+      const uuid = event.dataTransfer.getData('uuid');
+      this.$emit('move', { fromUuid: uuid, toUuid: this.uuid });
     },
     enrollIndividual(event) {
-      const organization = event.dataTransfer.getData("organization");
-      this.$emit("enroll", organization);
+      const organization = event.dataTransfer.getData('organization');
+      this.$emit('enroll', organization);
     },
     handleDrag(event, isDragging) {
       const types = event.dataTransfer.types;
 
-      if (isDragging && !types.includes("lockactions")) {
+      if (isDragging && !types.includes('lockactions')) {
         this.isDragging = true;
       } else {
         this.isDragging = false;
       }
-    }
+    },
   },
   watch: {
     name(value) {
@@ -282,12 +274,12 @@ export default {
     },
     email(value) {
       this.form.email = value;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-@import "../styles/index.scss";
+@import '../styles/index.scss';
 
 .theme--light.v-data-table tbody .expanded td:not(.v-data-table__mobile-row) {
   border: 0;

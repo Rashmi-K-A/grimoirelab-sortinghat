@@ -38,14 +38,10 @@
                 <span>{{ job.jobId }}</span>
               </v-tooltip>
             </td>
-            <td class="capitalize">{{ job.jobType.replace("_", " ") }}</td>
+            <td class="capitalize">{{ job.jobType.replace('_', ' ') }}</td>
             <td>{{ formatDate(job.enqueuedAt) }}</td>
             <td class="text-center">
-              <v-chip
-                class="ma-2"
-                :color="getColor(job.status)"
-                text-color="white"
-              >
+              <v-chip class="ma-2" :color="getColor(job.status)" text-color="white">
                 {{ job.status }}
               </v-chip>
             </td>
@@ -67,19 +63,19 @@
 
 <script>
 export default {
-  name: "JobsTable",
+  name: 'JobsTable',
   props: {
     getJobs: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       jobs: [],
       page: 1,
       pageSize: 10,
-      pageCount: 1
+      pageCount: 1,
     };
   },
   created() {
@@ -95,20 +91,20 @@ export default {
       }
     },
     getColor(status) {
-      if (status === "finished") {
-        return "#3fa500";
-      } else if (status === "failed") {
-        return "#f41900";
-      } else if (status === "started") {
-        return "primary";
+      if (status === 'finished') {
+        return '#3fa500';
+      } else if (status === 'failed') {
+        return '#f41900';
+      } else if (status === 'started') {
+        return 'primary';
       } else {
-        return "rgba(0, 0, 0, 0.42)";
+        return 'rgba(0, 0, 0, 0.42)';
       }
     },
     formatDate(dateTime) {
       return new Date(dateTime).toLocaleString();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

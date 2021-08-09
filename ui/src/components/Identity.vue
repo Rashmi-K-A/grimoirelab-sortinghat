@@ -27,30 +27,30 @@
 
 <script>
 export default {
-  name: "identity",
+  name: 'identity',
   props: {
     uuid: {
       type: String,
-      required: true
+      required: true,
     },
     name: {
       type: String,
-      required: false
+      required: false,
     },
     email: {
       type: String,
-      required: false
+      required: false,
     },
     username: {
       type: String,
-      required: false
+      required: false,
     },
     source: {
       type: String,
       required: false,
-      default: null
-    }
-  }
+      default: null,
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

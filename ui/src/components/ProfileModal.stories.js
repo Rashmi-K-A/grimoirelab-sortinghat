@@ -1,8 +1,8 @@
-import ProfileModal from "./ProfileModal.vue";
+import ProfileModal from './ProfileModal.vue';
 
 export default {
-  title: "ProfileModal",
-  excludeStories: /.*Data$/
+  title: 'ProfileModal',
+  excludeStories: /.*Data$/,
 };
 
 const ProfileModalTemplate = `
@@ -26,14 +26,14 @@ export const Default = () => ({
   data: () => ({
     isOpen: false,
     countries: [
-      { code: "AD", name: "Andorra" },
-      { code: "AE", name: "United Arab Emirates" },
-      { code: "AF", name: "Afghanistan" },
-      { code: "AG", name: "Antigua and Barbuda" },
-      { code: "AI", name: "Anguilla" },
-      { code: "AL", name: "Albania" },
-      { code: "AM", name: "Armenia" }
-    ]
+      { code: 'AD', name: 'Andorra' },
+      { code: 'AE', name: 'United Arab Emirates' },
+      { code: 'AF', name: 'Afghanistan' },
+      { code: 'AG', name: 'Antigua and Barbuda' },
+      { code: 'AI', name: 'Anguilla' },
+      { code: 'AL', name: 'Albania' },
+      { code: 'AM', name: 'Armenia' },
+    ],
   }),
   methods: {
     mockFunction() {
@@ -41,6 +41,6 @@ export const Default = () => ({
     },
     getCountries() {
       return this.countries;
-    }
-  }
+    },
+  },
 });

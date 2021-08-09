@@ -8,12 +8,7 @@
         <v-form ref="form">
           <v-row>
             <v-col cols="6">
-              <v-text-field
-                label="Name"
-                v-model="profileForm.name"
-                outlined
-                dense
-              />
+              <v-text-field label="Name" v-model="profileForm.name" outlined dense />
             </v-col>
             <v-col cols="6">
               <v-text-field
@@ -27,12 +22,7 @@
           </v-row>
           <v-row>
             <v-col cols="6">
-              <v-text-field
-                label="Username"
-                v-model="profileForm.username"
-                outlined
-                dense
-              />
+              <v-text-field label="Username" v-model="profileForm.username" outlined dense />
             </v-col>
             <v-col cols="6">
               <v-text-field
@@ -46,12 +36,7 @@
           </v-row>
           <v-row>
             <v-col cols="6">
-              <v-text-field
-                label="Gender"
-                v-model="profileForm.gender"
-                outlined
-                dense
-              />
+              <v-text-field label="Gender" v-model="profileForm.gender" outlined dense />
             </v-col>
             <v-col cols="4">
               <v-combobox
@@ -65,12 +50,7 @@
               />
             </v-col>
             <v-col cols="2">
-              <v-checkbox
-                v-model="profileForm.isBot"
-                label="Bot"
-                color="primary"
-                class="mt-1"
-              >
+              <v-checkbox v-model="profileForm.isBot" label="Bot" color="primary" class="mt-1">
               </v-checkbox>
             </v-col>
           </v-row>
@@ -166,12 +146,7 @@
         <v-btn color="primary darken-1" text @click.prevent="closeModal">
           Cancel
         </v-btn>
-        <v-btn
-          depressed
-          color="primary"
-          :disabled="disableSave"
-          @click.prevent="onSave"
-        >
+        <v-btn depressed color="primary" :disabled="disableSave" @click.prevent="onSave">
           Save
         </v-btn>
       </v-card-actions>
@@ -181,105 +156,100 @@
 
 <script>
 export default {
-  name: "ProfileModal",
+  name: 'ProfileModal',
   props: {
     isOpen: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     addIdentity: {
       type: Function,
-      required: true
+      required: true,
     },
     updateProfile: {
       type: Function,
-      required: true
+      required: true,
     },
     enroll: {
       type: Function,
-      required: true
+      required: true,
     },
     getCountries: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       profileForm: {
-        name: "",
-        email: "",
-        username: "",
-        source: "",
-        nationality: "",
-        gender: "",
+        name: '',
+        email: '',
+        username: '',
+        source: '',
+        nationality: '',
+        gender: '',
         isBot: false,
-        countries: []
+        countries: [],
       },
       enrollmentsForm: [
         {
-          organization: "",
-          fromDate: "",
+          organization: '',
+          fromDate: '',
           fromDateMenu: false,
-          toDate: "",
-          toDateMenu: false
-        }
+          toDate: '',
+          toDateMenu: false,
+        },
       ],
       savedData: {
         individual: undefined,
         profile: undefined,
-        enrollments: undefined
+        enrollments: undefined,
       },
       validations: {
-        required: [value => !!value || "Required"],
-        email: [
-          value =>
-            (value ? /\S+@\S+\.\S+/.test(value) : true) || "Invalid email"
-        ]
+        required: [(value) => !!value || 'Required'],
+        email: [(value) => (value ? /\S+@\S+\.\S+/.test(value) : true) || 'Invalid email'],
       },
-      errorMessage: "",
-      countries: []
+      errorMessage: '',
+      countries: [],
     };
   },
   computed: {
     disableSave() {
-      return [
-        this.profileForm.name,
-        this.profileForm.email,
-        this.profileForm.username
-      ].every(value => value === "");
-    }
+      return [this.profileForm.name, this.profileForm.email, this.profileForm.username].every(
+        (value) => value === '',
+      );
+    },
   },
   methods: {
     addInput() {
       this.enrollmentsForm.push({
-        organization: "",
-        fromDate: "",
-        toDate: "",
-        menu: false
+        organization: '',
+        fromDate: '',
+        toDate: '',
+        menu: false,
       });
     },
     removeEnrollment(index) {
       this.enrollmentsForm.splice(index, 1);
     },
     closeModal() {
-      this.$emit("update:isOpen", false);
-      this.$emit("updateTable");
+      this.$emit('update:isOpen', false);
+      this.$emit('updateTable');
       this.$refs.form.reset();
       this.enrollmentsForm = [
         {
-          organization: "",
-          fromDate: "",
-          toDate: ""
-        }
+          organization: '',
+          fromDate: '',
+          toDate: '',
+        },
       ];
       this.savedData = {
         individual: undefined,
         profile: undefined,
-        enrollments: undefined
+        enrollments: undefined,
       };
-      this.errorMessage = "";
+      this.errorMessage = '';
     },
     async onSave() {
       const isValid = this.$refs.form.validate();
@@ -298,9 +268,7 @@ export default {
       } else {
         const profile = await this.addProfileInfo(this.savedData.individual);
         if (profile) {
-          const enrollments = await this.addEnrollments(
-            this.savedData.individual
-          );
+          const enrollments = await this.addEnrollments(this.savedData.individual);
           if (enrollments) {
             this.closeModal();
           }
@@ -309,22 +277,16 @@ export default {
     },
     async createIndividual() {
       const data = {
-        email: this.profileForm.email === "" ? null : this.profileForm.email,
-        name: this.profileForm.name === "" ? null : this.profileForm.name,
+        email: this.profileForm.email === '' ? null : this.profileForm.email,
+        name: this.profileForm.name === '' ? null : this.profileForm.name,
         source: this.profileForm.source,
-        username:
-          this.profileForm.username === "" ? null : this.profileForm.username
+        username: this.profileForm.username === '' ? null : this.profileForm.username,
       };
       try {
-        const response = await this.addIdentity(
-          data.email,
-          data.name,
-          data.source,
-          data.username
-        );
+        const response = await this.addIdentity(data.email, data.name, data.source, data.username);
         if (response && response.data.addIdentity) {
           this.savedData.individual = response.data.addIdentity.uuid;
-          this.$logger.debug("Added identity", data);
+          this.$logger.debug('Added identity', data);
           return this.savedData.individual;
         }
       } catch (error) {
@@ -335,10 +297,8 @@ export default {
     async addProfileInfo(uuid) {
       const data = {
         gender: this.profileForm.gender,
-        countryCode: this.profileForm.country
-          ? this.profileForm.country.code
-          : null,
-        isBot: this.profileForm.isBot
+        countryCode: this.profileForm.country ? this.profileForm.country.code : null,
+        isBot: this.profileForm.isBot,
       };
       try {
         const response = await this.updateProfile(data, uuid);
@@ -355,32 +315,27 @@ export default {
     async addEnrollments() {
       try {
         const response = await Promise.all(
-          this.enrollmentsForm.map(enrollment => {
+          this.enrollmentsForm.map((enrollment) => {
             if (enrollment.organization) {
               const fromDate = enrollment.fromDate
                 ? new Date(enrollment.fromDate).toISOString()
                 : null;
-              const toDate = enrollment.toDate
-                ? new Date(enrollment.toDate).toISOString()
-                : null;
+              const toDate = enrollment.toDate ? new Date(enrollment.toDate).toISOString() : null;
               const response = this.enroll(
                 this.savedData.individual,
                 enrollment.organization,
                 fromDate,
-                toDate
+                toDate,
               );
-              this.$logger.debug(
-                `Enrolled individual ${this.savedData.individual}`,
-                {
-                  uuid: this.savedData.individual,
-                  organization: enrollment.organization,
-                  fromDate,
-                  toDate
-                }
-              );
+              this.$logger.debug(`Enrolled individual ${this.savedData.individual}`, {
+                uuid: this.savedData.individual,
+                organization: enrollment.organization,
+                fromDate,
+                toDate,
+              });
               return response;
             }
-          })
+          }),
         );
         if (response) {
           return response;
@@ -389,7 +344,7 @@ export default {
         this.errorMessage = this.$getErrorMessage(error);
         this.$logger.error(
           `Error enrolling individual ${this.savedData.individual}: ${error}`,
-          this.enrollmentsForm
+          this.enrollmentsForm,
         );
       }
     },
@@ -398,7 +353,7 @@ export default {
       if (response) {
         this.countries = response;
       }
-    }
-  }
+    },
+  },
 };
 </script>

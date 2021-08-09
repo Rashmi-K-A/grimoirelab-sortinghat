@@ -51,36 +51,36 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie';
 export default {
-  name: "App",
+  name: 'App',
   computed: {
     user() {
       return this.$store.state.user;
-    }
+    },
   },
   methods: {
     logOut() {
-      Cookies.remove("sh_authtoken");
-      Cookies.remove("sh_user");
-      this.$store.commit("setToken", undefined);
-      this.$store.commit("loginUser", undefined);
-      this.$router.push("/login");
+      Cookies.remove('sh_authtoken');
+      Cookies.remove('sh_user');
+      this.$store.commit('setToken', undefined);
+      this.$store.commit('loginUser', undefined);
+      this.$router.push('/login');
       this.$logger.info(`Log out user ${this.user}`);
-    }
+    },
   },
   watch: {
     $route: {
       immediate: true,
       handler(to) {
-        document.title = to.meta.title || "Sorting Hat";
-      }
-    }
-  }
+        document.title = to.meta.title || 'Sorting Hat';
+      },
+    },
+  },
 };
 </script>
 <style lang="scss">
-@import "styles/index.scss";
+@import 'styles/index.scss';
 .fade-enter-active,
 .fade-leave-active {
   transition-duration: 0.3s;

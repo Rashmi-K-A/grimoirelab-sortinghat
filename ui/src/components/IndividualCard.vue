@@ -5,7 +5,7 @@
       locked: isLocked,
       dropzone: isDragging,
       selected: isSelected,
-      highlighted: isHighlighted
+      highlighted: isHighlighted,
     }"
     raised
     v-on="$listeners"
@@ -70,69 +70,69 @@
 </template>
 
 <script>
-import Avatar from "./Avatar";
-import ExpandedIndividual from "./ExpandedIndividual";
+import Avatar from './Avatar';
+import ExpandedIndividual from './ExpandedIndividual';
 
 export default {
-  name: "individualcard",
+  name: 'individualcard',
   components: {
     Avatar,
-    ExpandedIndividual
+    ExpandedIndividual,
   },
   props: {
     name: {
       type: String,
       required: false,
-      default: null
+      default: null,
     },
     email: {
       type: String,
       required: false,
-      default: null
+      default: null,
     },
     sources: {
       type: Array,
       required: false,
-      default: () => []
+      default: () => [],
     },
     isSelected: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     uuid: {
       type: String,
-      required: true
+      required: true,
     },
     identities: {
       type: Array,
-      required: false
+      required: false,
     },
     enrollments: {
       type: Array,
-      required: false
+      required: false,
     },
     isHighlighted: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     isLocked: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      isDragging: false
+      isDragging: false,
     };
   },
   methods: {
     selectSourceIcon(source) {
       const datasource = source.toLowerCase();
 
-      if (datasource === "others") {
-        return "mdi-account-multiple";
+      if (datasource === 'others') {
+        return 'mdi-account-multiple';
       } else {
         return `mdi-${datasource}`;
       }
@@ -142,51 +142,49 @@ export default {
       if (this.isLocked) {
         return;
       }
-      const type = event.dataTransfer.getData("type");
-      if (type === "move") {
+      const type = event.dataTransfer.getData('type');
+      if (type === 'move') {
         this.moveIndividual(event);
-      } else if (type === "enrollFromOrganization") {
+      } else if (type === 'enrollFromOrganization') {
         this.enrollIndividual(event);
       } else {
         this.mergeIndividuals(event);
       }
     },
     selectIndividual() {
-      this.$emit("select");
+      this.$emit('select');
     },
     moveIndividual(event) {
-      const uuid = event.dataTransfer.getData("uuid");
-      this.$emit("move", { fromUuid: uuid, toUuid: this.uuid });
+      const uuid = event.dataTransfer.getData('uuid');
+      this.$emit('move', { fromUuid: uuid, toUuid: this.uuid });
     },
     mergeIndividuals(event) {
-      const droppedIndividuals = JSON.parse(
-        event.dataTransfer.getData("individuals")
-      );
+      const droppedIndividuals = JSON.parse(event.dataTransfer.getData('individuals'));
       const uuids = droppedIndividuals
-        .filter(individual => !individual.isLocked)
-        .map(individual => individual.uuid);
+        .filter((individual) => !individual.isLocked)
+        .map((individual) => individual.uuid);
       if (uuids.length > 0) {
-        this.$emit("merge", [this.uuid, ...uuids]);
+        this.$emit('merge', [this.uuid, ...uuids]);
       }
     },
     enrollIndividual(event) {
-      const organization = event.dataTransfer.getData("organization");
-      this.$emit("enroll", organization);
+      const organization = event.dataTransfer.getData('organization');
+      this.$emit('enroll', organization);
     },
     isDropZone(event, isDragging) {
       const types = event.dataTransfer.types;
 
-      if (isDragging && !types.includes("lockactions")) {
+      if (isDragging && !types.includes('lockactions')) {
         this.isDragging = true;
       } else {
         this.isDragging = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-@import "../styles/index.scss";
+@import '../styles/index.scss';
 
 .v-list-item--three-line .v-list-item__avatar {
   font-size: 0.8rem;

@@ -1,8 +1,8 @@
-import OrganizationsTable from "./OrganizationsTable.vue";
+import OrganizationsTable from './OrganizationsTable.vue';
 
 export default {
-  title: "OrganizationsTable",
-  excludeStories: /.*Data$/
+  title: 'OrganizationsTable',
+  excludeStories: /.*Data$/,
 };
 
 const OrganizationsTableTemplate = `
@@ -13,6 +13,7 @@ const OrganizationsTableTemplate = `
     :add-domain="addDomain"
     :delete-domain="deleteDomain"
     :delete-organization="deleteOrganization"
+    :add-team="addTeam" :delete-team="deleteTeam" :fetch-teams="fetchTeams"
   />
 `;
 
@@ -24,8 +25,7 @@ export const Default = () => ({
       const results = JSON.parse(JSON.stringify(this.query[page - 1]));
       if (filters.term) {
         results.data.organizations.entities = results.data.organizations.entities.filter(
-          organization =>
-            organization.name.toUpperCase().includes(filters.term.toUpperCase())
+          (organization) => organization.name.toUpperCase().includes(filters.term.toUpperCase()),
         );
         results.data.organizations.pageInfo.totalResults =
           results.data.organizations.entities.length;
@@ -40,31 +40,40 @@ export const Default = () => ({
         id: organization,
         name: organization,
         enrollments: [],
-        domains: []
+        domains: [],
       });
       return true;
     },
     addDomain(domain, organization) {
       const index = this.query[0].data.organizations.entities.findIndex(
-        entity => entity.name === organization
+        (entity) => entity.name === organization,
       );
       this.query[0].data.organizations.entities[index].domains.push({
-        domain: domain
+        domain: domain,
       });
       return true;
     },
     deleteDomain(domain) {
-      this.query[0].data.organizations.entities.find(entity => {
-        const index = entity.domains.findIndex(item => item.domain === domain);
+      this.query[0].data.organizations.entities.find((entity) => {
+        const index = entity.domains.findIndex((item) => item.domain === domain);
         entity.domains.splice(index, 1);
       });
     },
     deleteOrganization(name) {
       const index = this.query[0].data.organizations.entities.findIndex(
-        entity => entity.name === name
+        (entity) => entity.name === name,
       );
       this.query[0].data.organizations.entities.splice(index, 1);
-    }
+    },
+    addTeam() {
+      return;
+    },
+    deleteTeam() {
+      return;
+    },
+    fetchTeams() {
+      return;
+    },
   },
   data: () => ({
     query: [
@@ -74,38 +83,32 @@ export const Default = () => ({
             entities: [
               {
                 id: 1,
-                name: "Griffyndor",
-                enrollments: [
-                  { id: 1 },
-                  { id: 2 },
-                  { id: 3 },
-                  { id: 4 },
-                  { id: 5 }
-                ],
-                domains: [{ domain: "griffyndor.hogwarts.edu" }],
-                teams: [{team: "Prefects"}]
+                name: 'Griffyndor',
+                enrollments: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+                domains: [{ domain: 'griffyndor.hogwarts.edu' }],
+                teams: [{ team: 'Prefects' }],
               },
               {
                 id: 2,
-                name: "Slytherin",
+                name: 'Slytherin',
                 enrollments: [{ id: 1 }, { id: 2 }],
-                domains: [{ domain: "slytherin.hogwarts.edu" }]
+                domains: [{ domain: 'slytherin.hogwarts.edu' }],
               },
               {
                 id: 3,
-                name: "Ravenclaw",
+                name: 'Ravenclaw',
                 enrollments: [{ id: 1 }, { id: 2 }, { id: 3 }],
-                domains: [{ domain: "ravenclaw.hogwarts.edu" }]
-              }
+                domains: [{ domain: 'ravenclaw.hogwarts.edu' }],
+              },
             ],
             pageInfo: {
               page: 1,
               pageSize: 3,
               numPages: 2,
-              totalResults: 4
-            }
-          }
-        }
+              totalResults: 4,
+            },
+          },
+        },
       },
       {
         data: {
@@ -113,20 +116,20 @@ export const Default = () => ({
             entities: [
               {
                 id: 4,
-                name: "Hufflepuff",
+                name: 'Hufflepuff',
                 enrollments: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }],
-                domains: [{ domain: "hufflepuff.hogwarts.edu" }]
-              }
+                domains: [{ domain: 'hufflepuff.hogwarts.edu' }],
+              },
             ],
             pageInfo: {
               page: 2,
               pageSize: 3,
               numPages: 2,
-              totalResults: 4
-            }
-          }
-        }
-      }
-    ]
-  })
+              totalResults: 4,
+            },
+          },
+        },
+      },
+    ],
+  }),
 });

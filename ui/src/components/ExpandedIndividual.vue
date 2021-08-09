@@ -4,9 +4,9 @@
     <v-row v-if="!compact" class="indented mb-2 mt">
       <div class="ml-4">
         <span class="grey--text text--darken-2">Gender: </span>
-        <span v-if="isLocked">{{ gender || " -" }}</span>
+        <span v-if="isLocked">{{ gender || ' -' }}</span>
         <v-edit-dialog v-else @save="$emit('edit', { gender: form.gender })">
-          {{ gender || " -" }}
+          {{ gender || ' -' }}
           <v-icon small right>
             mdi-lead-pencil
           </v-icon>
@@ -22,16 +22,16 @@
       </div>
       <div class="ml-6">
         <span class="grey--text text--darken-2">Country: </span>
-        <span v-if="isLocked">{{ country ? country.name : "-" }}</span>
+        <span v-if="isLocked">{{ country ? country.name : '-' }}</span>
         <v-edit-dialog
           v-else
           @close="
             $emit('edit', {
-              countryCode: form.country ? form.country.code : ''
+              countryCode: form.country ? form.country.code : '',
             })
           "
         >
-          <span class="black--text">{{ country ? country.name : "-" }}</span>
+          <span class="black--text">{{ country ? country.name : '-' }}</span>
           <v-icon small right>
             mdi-lead-pencil
           </v-icon>
@@ -73,15 +73,11 @@
         </thead>
         <tbody>
           <tr v-for="item in flatIdentities" :key="item.uuid">
-            <td>{{ item.name || "-" }}</td>
-            <td>{{ item.email || "-" }}</td>
-            <td>{{ item.username || "-" }}</td>
+            <td>{{ item.name || '-' }}</td>
+            <td>{{ item.email || '-' }}</td>
+            <td>{{ item.username || '-' }}</td>
             <td>
-              <v-tooltip
-                bottom
-                transition="expand-y-transition"
-                open-delay="300"
-              >
+              <v-tooltip bottom transition="expand-y-transition" open-delay="300">
                 <template v-slot:activator="{ on }">
                   <v-icon v-on="on" v-text="item.icon" small left />
                 </template>
@@ -97,7 +93,7 @@
       v-for="(source, sourceIndex) in identities"
       :key="source.name"
       :class="{
-        'row-border': sourceIndex !== identities.length - 1
+        'row-border': sourceIndex !== identities.length - 1,
       }"
       class="indented"
       dense
@@ -218,11 +214,7 @@
                 min-width="290px"
               >
                 <template v-slot:activator="{ on, attrs }">
-                  <button
-                    v-on="on"
-                    v-bind="attrs"
-                    class="v-small-dialog__activator"
-                  >
+                  <button v-on="on" v-bind="attrs" class="v-small-dialog__activator">
                     {{ formatDate(enrollment.start) }}
                     <v-icon small right>
                       mdi-lead-pencil
@@ -237,11 +229,7 @@
                   scrollable
                 >
                   <v-spacer></v-spacer>
-                  <v-btn
-                    text
-                    color="primary"
-                    @click="enrollmentsForm[index].fromDateMenu = false"
-                  >
+                  <v-btn text color="primary" @click="enrollmentsForm[index].fromDateMenu = false">
                     Cancel
                   </v-btn>
                   <v-btn
@@ -251,11 +239,9 @@
                       $emit('updateEnrollment', {
                         fromDate: enrollment.start,
                         toDate: enrollment.end,
-                        newFromDate: new Date(
-                          enrollmentsForm[index].fromDate
-                        ).toISOString(),
+                        newFromDate: new Date(enrollmentsForm[index].fromDate).toISOString(),
                         organization: enrollment.organization.name,
-                        uuid: uuid
+                        uuid: uuid,
                       });
                       enrollmentsForm[index].fromDateMenu = false;
                     "
@@ -279,11 +265,7 @@
                 min-width="290px"
               >
                 <template v-slot:activator="{ on, attrs }">
-                  <button
-                    v-on="on"
-                    v-bind="attrs"
-                    class="v-small-dialog__activator"
-                  >
+                  <button v-on="on" v-bind="attrs" class="v-small-dialog__activator">
                     {{ formatDate(enrollment.end) }}
                     <v-icon small right>
                       mdi-lead-pencil
@@ -298,11 +280,7 @@
                   scrollable
                 >
                   <v-spacer></v-spacer>
-                  <v-btn
-                    text
-                    color="primary"
-                    @click="enrollmentsForm[index].toDateMenu = false"
-                  >
+                  <v-btn text color="primary" @click="enrollmentsForm[index].toDateMenu = false">
                     Cancel
                   </v-btn>
                   <v-btn
@@ -312,11 +290,9 @@
                       $emit('updateEnrollment', {
                         fromDate: enrollment.start,
                         toDate: enrollment.end,
-                        newToDate: new Date(
-                          enrollmentsForm[index].toDate
-                        ).toISOString(),
+                        newToDate: new Date(enrollmentsForm[index].toDate).toISOString(),
                         organization: enrollment.organization.name,
-                        uuid: uuid
+                        uuid: uuid,
                       });
                       enrollmentsForm[index].toDateMenu = false;
                     "
@@ -327,11 +303,7 @@
               </v-menu>
             </v-col>
             <v-col class="text-end col-2">
-              <v-tooltip
-                bottom
-                transition="expand-y-transition"
-                open-delay="200"
-              >
+              <v-tooltip bottom transition="expand-y-transition" open-delay="200">
                 <template v-slot:activator="{ on }">
                   <v-btn
                     icon
@@ -341,7 +313,7 @@
                       $emit('withdraw', {
                         name: enrollment.organization.name,
                         fromDate: enrollment.start,
-                        toDate: enrollment.end
+                        toDate: enrollment.end,
                       })
                     "
                   >
@@ -365,51 +337,51 @@
 </template>
 
 <script>
-import Identity from "./Identity.vue";
+import Identity from './Identity.vue';
 
 export default {
-  name: "ExpandedIndividual",
+  name: 'ExpandedIndividual',
   components: {
-    Identity
+    Identity,
   },
   props: {
     gender: {
       type: String,
-      required: false
+      required: false,
     },
     country: {
       type: Object,
-      required: false
+      required: false,
     },
     isBot: {
       type: Boolean,
-      required: false
+      required: false,
     },
     isLocked: {
       type: Boolean,
-      required: false
+      required: false,
     },
     identities: {
       type: Array,
-      required: true
+      required: true,
     },
     enrollments: {
       type: Array,
-      required: true
+      required: true,
     },
     compact: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     uuid: {
       type: String,
-      required: true
+      required: true,
     },
     getCountries: {
       type: Function,
-      required: false
-    }
+      required: false,
+    },
   },
   data() {
     return {
@@ -417,14 +389,14 @@ export default {
       form: {
         gender: this.gender,
         country: this.country,
-        isBot: this.isBot
+        isBot: this.isBot,
       },
-      enrollmentsForm: []
+      enrollmentsForm: [],
     };
   },
   methods: {
     formatDate(dateTime) {
-      return dateTime.split("T")[0];
+      return dateTime.split('T')[0];
     },
     sortSources(identities, property) {
       return identities.slice().sort((a, b) => {
@@ -435,15 +407,15 @@ export default {
       });
     },
     startDrag(identity, event) {
-      const dragImage = document.querySelector(".dragged-identity");
+      const dragImage = document.querySelector('.dragged-identity');
       event.dataTransfer.setDragImage(dragImage, 0, 0);
-      event.dataTransfer.effectAllowed = "move";
-      event.dataTransfer.setData("type", "move");
-      event.dataTransfer.setData("uuid", identity.uuid);
-      event.target.classList.add("dragging");
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('type', 'move');
+      event.dataTransfer.setData('uuid', identity.uuid);
+      event.target.classList.add('dragging');
     },
     dragEnd(event) {
-      event.target.classList.remove("dragging");
+      event.target.classList.remove('dragging');
     },
     async getCountryList() {
       const response = await this.getCountries();
@@ -452,50 +424,48 @@ export default {
       }
     },
     splitAll() {
-      const uuids = this.flatIdentities.map(identity => identity.uuid);
-      this.$emit("unmerge", uuids);
+      const uuids = this.flatIdentities.map((identity) => identity.uuid);
+      this.$emit('unmerge', uuids);
     },
     withdrawAll() {
-      this.enrollments.forEach(enrollment => {
-        this.$emit("withdraw", {
+      this.enrollments.forEach((enrollment) => {
+        this.$emit('withdraw', {
           name: enrollment.organization.name,
           fromDate: enrollment.start,
-          toDate: enrollment.end
+          toDate: enrollment.end,
         });
       });
-    }
+    },
   },
   computed: {
     identitiesCount() {
       return this.identities.reduce((a, b) => a + b.identities.length, 0);
     },
     sources() {
-      return this.identities.map(identity => identity.name);
+      return this.identities.map((identity) => identity.name);
     },
     flatIdentities() {
       return this.identities
-        .map(source =>
-          source.identities.map(identity =>
-            Object.assign({ icon: source.icon }, identity)
-          )
+        .map((source) =>
+          source.identities.map((identity) => Object.assign({ icon: source.icon }, identity)),
         )
         .flat();
-    }
+    },
   },
   created() {
-    this.enrollments.forEach(enrollment => {
+    this.enrollments.forEach((enrollment) => {
       this.enrollmentsForm.push({
         fromDate: this.formatDate(enrollment.start),
         fromDateMenu: false,
         toDate: this.formatDate(enrollment.end),
-        toDateMenu: false
+        toDateMenu: false,
       });
     });
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>
-@import "../styles/index.scss";
+@import '../styles/index.scss';
 .indented {
   margin-left: 40px;
   background-color: transparent;

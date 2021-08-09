@@ -1,8 +1,8 @@
-import OrganizationEntry from "./OrganizationEntry.vue";
+import OrganizationEntry from './OrganizationEntry.vue';
 
 export default {
-  title: "OrganizationEntry",
-  excludeStories: /.*Data$/
+  title: 'OrganizationEntry',
+  excludeStories: /.*Data$/,
 };
 
 const organizationEntryTemplate = `
@@ -31,13 +31,13 @@ export const Default = () => ({
   components: { OrganizationEntry },
   template: organizationEntryTemplate,
   data: () => ({
-    headers: [{ value: "name" }, { value: "enrollments" }],
+    headers: [{ value: 'name' }, { value: 'enrollments' }],
     items: [
       {
-        name: "Hogwarts School of Witchcraft and Wizardry",
-        enrollments: 280
-      }
+        name: 'Hogwarts School of Witchcraft and Wizardry',
+        enrollments: 280,
+      },
     ],
-    expanded: []
-  })
+    expanded: [],
+  }),
 });

@@ -23,70 +23,67 @@
         @change="setInputDate($event)"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="date" :min="min" :max="max" no-title scrollable>
-    </v-date-picker>
+    <v-date-picker v-model="date" :min="min" :max="max" no-title scrollable> </v-date-picker>
   </v-menu>
 </template>
 
 <script>
 export default {
-  name: "DateInput",
+  name: 'DateInput',
   props: {
     value: {
-      type: [String, Date]
+      type: [String, Date],
     },
     label: {
       type: String,
-      required: true
+      required: true,
     },
     min: {
       type: [String, Date],
-      required: false
+      required: false,
     },
     max: {
       type: [String, Date],
-      required: false
+      required: false,
     },
     filled: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     outlined: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       openPicker: false,
       error: null,
-      inputDate: this.value
+      inputDate: this.value,
     };
   },
   computed: {
     date: {
       get() {
         try {
-          const ISODate = this.value
-            ? new Date(this.value).toISOString()
-            : null;
+          const ISODate = this.value ? new Date(this.value).toISOString() : null;
           this.setInputDate(ISODate);
           return ISODate;
         } catch {
-          this.setError("Invalid date");
+          this.setError('Invalid date');
           return null;
         }
       },
       set(value) {
         const ISODate = new Date(value).toISOString();
-        this.$emit("input", ISODate);
+        this.$emit('input', ISODate);
         this.openPicker = false;
         this.setInputDate(ISODate);
         this.setError(null);
-      }
-    }
+      },
+    },
   },
   methods: {
     setError(error) {
@@ -98,14 +95,14 @@ export default {
       }
       try {
         const ISODate = date ? new Date(date).toISOString() : null;
-        this.$emit("input", ISODate);
+        this.$emit('input', ISODate);
         this.setError(null);
         this.openPicker = false;
         this.inputDate = ISODate.substring(0, 10);
       } catch {
-        this.setError("Invalid date");
+        this.setError('Invalid date');
       }
-    }
-  }
+    },
+  },
 };
 </script>

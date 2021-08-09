@@ -1,5 +1,5 @@
-import { formatIndividuals } from "../utils/actions";
-import DateInput from "../components/DateInput.vue";
+import { formatIndividuals } from '../utils/actions';
+import DateInput from '../components/DateInput.vue';
 
 const enrollMixin = {
   components: { DateInput },
@@ -13,49 +13,39 @@ const enrollMixin = {
         dateTo: null,
         showDates: true,
         action: () =>
-          this.enrollIndividual(
-            uuid,
-            organization,
-            this.dialog.dateFrom,
-            this.dialog.dateTo
-          )
+          this.enrollIndividual(uuid, organization, this.dialog.dateFrom, this.dialog.dateTo),
       });
     },
     async enrollIndividual(uuid, organization, dateFrom, dateTo) {
       this.closeDialog();
       try {
-        const response = await this.enroll(
-          uuid,
-          organization,
-          dateFrom,
-          dateTo
-        );
+        const response = await this.enroll(uuid, organization, dateFrom, dateTo);
         if (response) {
-          this.$emit("updateWorkspace", {
-            update: formatIndividuals([response.data.enroll.individual])
+          this.$emit('updateWorkspace', {
+            update: formatIndividuals([response.data.enroll.individual]),
           });
-          this.$emit("updateOrganizations");
-          this.$emit("updateIndividuals");
+          this.$emit('updateOrganizations');
+          this.$emit('updateIndividuals');
           if (this.queryIndividuals) {
             this.queryIndividuals();
           }
-          this.$logger.debug("Enrolled individual", {
+          this.$logger.debug('Enrolled individual', {
             organization,
             uuid,
             dateFrom,
-            dateTo
+            dateTo,
           });
         }
       } catch (error) {
         Object.assign(this.dialog, {
           open: true,
-          title: "Error",
+          title: 'Error',
           text: this.$getErrorMessage(error),
-          action: null
+          action: null,
         });
       }
-    }
-  }
+    },
+  },
 };
 
 export { enrollMixin };

@@ -19,33 +19,33 @@
 </template>
 
 <script>
-import IndividualCard from "./IndividualCard.vue";
-import { mapState } from "vuex";
+import IndividualCard from './IndividualCard.vue';
+import { mapState } from 'vuex';
 export default {
-  name: "individualsgrid",
+  name: 'individualsgrid',
   components: {
-    IndividualCard
+    IndividualCard,
   },
   props: {
     individuals: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
-    ...mapState(["selectedIndividual", "selectedIndividuals"]),
+    ...mapState(['selectedIndividual', 'selectedIndividuals']),
     noIndividuals: function() {
       return this.individuals.length === 0;
-    }
+    },
   },
   methods: {
     getSources(identities) {
-      const icons = ["git", "github", "gitlab"];
-      const sources = identities.map(identity => {
-        if (icons.find(icon => icon === identity.source.toLowerCase())) {
+      const icons = ['git', 'github', 'gitlab'];
+      const sources = identities.map((identity) => {
+        if (icons.find((icon) => icon === identity.source.toLowerCase())) {
           return identity.source;
         } else {
-          return "Others";
+          return 'Others';
         }
       });
 
@@ -53,16 +53,16 @@ export default {
     },
     selectIndividual(uuid) {
       if (this.$store) {
-        this.$store.commit("addIndividual", uuid);
+        this.$store.commit('addIndividual', uuid);
       }
     },
     isSelected(uuid) {
       if (this.$store) {
-        return this.selectedIndividuals.find(individual => individual === uuid);
+        return this.selectedIndividuals.find((individual) => individual === uuid);
       } else {
         return false;
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -8,44 +8,63 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-subheader>Teams  -
+    <v-subheader
+      >Teams -
       <v-btn depressed small height="34" @click.stop="openModal" text>
         View all
       </v-btn>
     </v-subheader>
-    <team-modal :is-open.sync="modal.open" :organization="organization"/>
+    <team-modal
+      :is-open.sync="modal.open"
+      :organization="organization"
+      :add-team="addTeam"
+      :delete-team="deleteTeam"
+      :fetch-teams="fetchTeams"
+    />
   </td>
 </template>
 
 <script>
-import TeamModal from "./TeamModal.vue";
+import TeamModal from './TeamModal.vue';
 
 export default {
-  name: "ExpandedOrganization",
+  name: 'ExpandedOrganization',
   components: {
-    TeamModal
+    TeamModal,
   },
   props: {
     domains: {
       type: Array,
-      required: true
+      required: true,
     },
     organization: {
-        type: String,
-        required: true
-    }
+      type: String,
+      required: true,
+    },
+    addTeam: {
+      type: Function,
+      required: true,
+    },
+    deleteTeam: {
+      type: Function,
+      required: true,
+    },
+    fetchTeams: {
+      type: Function,
+      required: true,
+    },
   },
-data() {
+  data() {
     return {
       modal: {
         open: false,
-      }
+      },
     };
   },
   methods: {
-   openModal() {
-      Object.assign(this.modal, {open: true});
-   },
-  }
+    openModal() {
+      Object.assign(this.modal, { open: true });
+    },
+  },
 };
 </script>

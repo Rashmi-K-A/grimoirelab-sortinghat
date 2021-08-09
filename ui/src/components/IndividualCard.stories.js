@@ -1,8 +1,8 @@
-import IndividualCard from "./IndividualCard.vue";
+import IndividualCard from './IndividualCard.vue';
 
 export default {
-  title: "IndividualCard",
-  excludeStories: /.*Data$/
+  title: 'IndividualCard',
+  excludeStories: /.*Data$/,
 };
 
 const individualCardTemplate = `
@@ -22,233 +22,233 @@ export const Default = () => ({
   template: individualCardTemplate,
   props: {
     name: {
-      default: "Tom Marvolo Riddle"
+      default: 'Tom Marvolo Riddle',
     },
     sources: {
-      default: () => []
+      default: () => [],
     },
     isLocked: {
-      default: false
+      default: false,
     },
     uuid: {
-      default: "10f546"
+      default: '10f546',
     },
     email: {
-      default: "triddle@example.net"
+      default: 'triddle@example.net',
     },
     identities: {
-      default: () => []
+      default: () => [],
     },
     enrollments: {
-      default: () => []
+      default: () => [],
     },
     isHighlighted: {
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 });
 export const SingleInitial = () => ({
   components: { IndividualCard },
   template: individualCardTemplate,
   props: {
     name: {
-      default: "Voldemort"
+      default: 'Voldemort',
     },
     sources: {
-      default: () => []
+      default: () => [],
     },
     isLocked: {
-      default: false
+      default: false,
     },
     uuid: {
-      default: "10f546"
+      default: '10f546',
     },
     email: {
-      default: "voldemort@example.net"
+      default: 'voldemort@example.net',
     },
     identities: {
-      default: () => []
+      default: () => [],
     },
     enrollments: {
-      default: () => []
+      default: () => [],
     },
     isHighlighted: {
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 });
 export const NoName = () => ({
   components: { IndividualCard },
   template: individualCardTemplate,
   props: {
     name: {
-      default: ""
+      default: '',
     },
     sources: {
-      default: () => []
+      default: () => [],
     },
     isLocked: {
-      default: false
+      default: false,
     },
     uuid: {
-      default: "10f546"
+      default: '10f546',
     },
     email: {
-      default: "triddle@example.net"
+      default: 'triddle@example.net',
     },
     identities: {
       default: () => [
         {
-          name: "GitLab",
-          icon: "mdi-gitlab",
+          name: 'GitLab',
+          icon: 'mdi-gitlab',
           identities: [
             {
-              name: "",
-              source: "GitLab",
-              email: "triddle@example.net",
-              uuid: "03b3428ee",
-              username: "triddle"
-            }
-          ]
-        }
-      ]
+              name: '',
+              source: 'GitLab',
+              email: 'triddle@example.net',
+              uuid: '03b3428ee',
+              username: 'triddle',
+            },
+          ],
+        },
+      ],
     },
     enrollments: {
-      default: () => []
+      default: () => [],
     },
     isHighlighted: {
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 });
 export const Sources = () => ({
   components: { IndividualCard },
   template: individualCardTemplate,
   props: {
     name: {
-      default: "Tom Marvolo Riddle"
+      default: 'Tom Marvolo Riddle',
     },
     sources: {
       default: () => [
-        { name: "git", icon: "mdi-git" },
-        { name: "github", icon: "mdi-github" },
-        { name: "gitlab", icon: "mdi-gitlab" },
-        { name: "Other sources", icon: "mdi-account-multiple" }
-      ]
+        { name: 'git', icon: 'mdi-git' },
+        { name: 'github', icon: 'mdi-github' },
+        { name: 'gitlab', icon: 'mdi-gitlab' },
+        { name: 'Other sources', icon: 'mdi-account-multiple' },
+      ],
     },
     isLocked: {
-      default: false
+      default: false,
     },
     uuid: {
-      default: "10f546"
+      default: '10f546',
     },
     email: {
-      default: "triddle@example.net"
+      default: 'triddle@example.net',
     },
     isHighlighted: {
-      default: false
+      default: false,
     },
     identities: {
       default: () => [
         {
-          name: "GitLab",
-          icon: "mdi-gitlab",
+          name: 'GitLab',
+          icon: 'mdi-gitlab',
           identities: [
             {
-              name: "Tom Marvolo Riddle",
-              source: "GitLab",
-              email: "triddle@example.net",
-              uuid: "03b3428ee",
-              username: "triddle"
-            }
-          ]
+              name: 'Tom Marvolo Riddle',
+              source: 'GitLab',
+              email: 'triddle@example.net',
+              uuid: '03b3428ee',
+              username: 'triddle',
+            },
+          ],
         },
         {
-          name: "GitHub",
-          icon: "mdi-github",
+          name: 'GitHub',
+          icon: 'mdi-github',
           identities: [
             {
-              uuid: "808b18",
-              name: "Voldemort",
-              email: "-",
-              username: "voldemort",
-              source: "github"
-            }
-          ]
+              uuid: '808b18',
+              name: 'Voldemort',
+              email: '-',
+              username: 'voldemort',
+              source: 'github',
+            },
+          ],
         },
         {
-          name: "git",
-          icon: "mdi-git",
+          name: 'git',
+          icon: 'mdi-git',
           identities: [
             {
-              uuid: "006afa",
-              name: "Tom Marvolo Riddle",
-              email: "triddle@example.net",
-              username: "triddle",
-              source: "git"
+              uuid: '006afa',
+              name: 'Tom Marvolo Riddle',
+              email: 'triddle@example.net',
+              username: 'triddle',
+              source: 'git',
             },
             {
-              uuid: "abce32",
-              name: "voldemort",
-              email: "voldemort@example.net",
-              username: "-",
-              source: "git"
-            }
-          ]
-        }
-      ]
+              uuid: 'abce32',
+              name: 'voldemort',
+              email: 'voldemort@example.net',
+              username: '-',
+              source: 'git',
+            },
+          ],
+        },
+      ],
     },
     enrollments: {
-      default: () => []
-    }
-  }
+      default: () => [],
+    },
+  },
 });
 export const Organization = () => ({
   components: { IndividualCard },
   template: individualCardTemplate,
   props: {
     name: {
-      default: "Tom Marvolo Riddle"
+      default: 'Tom Marvolo Riddle',
     },
     sources: {
-      default: () => []
+      default: () => [],
     },
     isLocked: {
-      default: true
+      default: true,
     },
     uuid: {
-      default: "10f546"
+      default: '10f546',
     },
     email: {
-      default: "triddle@example.net"
+      default: 'triddle@example.net',
     },
     isHighlighted: {
-      default: false
+      default: false,
     },
     identities: {
-      default: () => []
+      default: () => [],
     },
     enrollments: {
       default: () => [
         {
           organization: {
-            name: "Slytherin",
-            id: "2"
+            name: 'Slytherin',
+            id: '2',
           },
-          start: "1938-09-01T00:00:00+00:00",
-          end: "1998-05-02T00:00:00+00:00"
+          start: '1938-09-01T00:00:00+00:00',
+          end: '1998-05-02T00:00:00+00:00',
         },
         {
           organization: {
-            name: "Hogwarts School of Witchcraft and Wizardry",
-            id: "1"
+            name: 'Hogwarts School of Witchcraft and Wizardry',
+            id: '1',
           },
-          start: "1938-09-01",
-          end: "1945-06-02T00:00:00+00:00"
-        }
-      ]
-    }
-  }
+          start: '1938-09-01',
+          end: '1945-06-02T00:00:00+00:00',
+        },
+      ],
+    },
+  },
 });
 
 export const Highlighted = () => ({
@@ -256,30 +256,30 @@ export const Highlighted = () => ({
   template: individualCardTemplate,
   props: {
     name: {
-      default: "Tom Marvolo Riddle"
+      default: 'Tom Marvolo Riddle',
     },
     sources: {
-      default: () => []
+      default: () => [],
     },
     isLocked: {
-      default: false
+      default: false,
     },
     uuid: {
-      default: "10f546"
+      default: '10f546',
     },
     email: {
-      default: "triddle@example.net"
+      default: 'triddle@example.net',
     },
     isHighlighted: {
-      default: true
+      default: true,
     },
     identities: {
-      default: () => []
+      default: () => [],
     },
     enrollments: {
-      default: () => []
-    }
-  }
+      default: () => [],
+    },
+  },
 });
 
 export const SourcesAndOrganization = () => ({
@@ -287,99 +287,99 @@ export const SourcesAndOrganization = () => ({
   template: individualCardTemplate,
   props: {
     name: {
-      default: "Tom Marvolo Riddle"
+      default: 'Tom Marvolo Riddle',
     },
     sources: {
       default: () => [
-        { name: "git", icon: "mdi-git" },
-        { name: "github", icon: "mdi-github" },
-        { name: "gitlab", icon: "mdi-gitlab" },
-        { name: "Other sources", icon: "mdi-account-multiple" }
-      ]
+        { name: 'git', icon: 'mdi-git' },
+        { name: 'github', icon: 'mdi-github' },
+        { name: 'gitlab', icon: 'mdi-gitlab' },
+        { name: 'Other sources', icon: 'mdi-account-multiple' },
+      ],
     },
     isLocked: {
-      default: true
+      default: true,
     },
     uuid: {
-      default: "10f546"
+      default: '10f546',
     },
     email: {
-      default: "triddle@example.net"
+      default: 'triddle@example.net',
     },
     identities: {
       default: () => [
         {
-          name: "GitLab",
-          icon: "mdi-gitlab",
+          name: 'GitLab',
+          icon: 'mdi-gitlab',
           identities: [
             {
-              name: "Tom Marvolo Riddle",
-              source: "GitLab",
-              email: "triddle@example.net",
-              uuid: "03b3428ee",
-              username: "triddle"
-            }
-          ]
+              name: 'Tom Marvolo Riddle',
+              source: 'GitLab',
+              email: 'triddle@example.net',
+              uuid: '03b3428ee',
+              username: 'triddle',
+            },
+          ],
         },
         {
-          name: "GitHub",
-          icon: "mdi-github",
+          name: 'GitHub',
+          icon: 'mdi-github',
           identities: [
             {
-              uuid: "808b18",
-              name: "Voldemort",
-              email: "-",
-              username: "voldemort",
-              source: "github"
-            }
-          ]
+              uuid: '808b18',
+              name: 'Voldemort',
+              email: '-',
+              username: 'voldemort',
+              source: 'github',
+            },
+          ],
         },
         {
-          name: "git",
-          icon: "mdi-git",
+          name: 'git',
+          icon: 'mdi-git',
           identities: [
             {
-              uuid: "006afa",
-              name: "Tom Marvolo Riddle",
-              email: "triddle@example.net",
-              username: "triddle",
-              source: "git"
+              uuid: '006afa',
+              name: 'Tom Marvolo Riddle',
+              email: 'triddle@example.net',
+              username: 'triddle',
+              source: 'git',
             },
             {
-              uuid: "abce32",
-              name: "voldemort",
-              email: "voldemort@example.net",
-              username: "-",
-              source: "git"
-            }
-          ]
-        }
-      ]
+              uuid: 'abce32',
+              name: 'voldemort',
+              email: 'voldemort@example.net',
+              username: '-',
+              source: 'git',
+            },
+          ],
+        },
+      ],
     },
     enrollments: {
       default: () => [
         {
           organization: {
-            name: "Slytherin",
-            id: "2"
+            name: 'Slytherin',
+            id: '2',
           },
-          start: "1938-09-01T00:00:00+00:00",
-          end: "1998-05-02T00:00:00+00:00"
+          start: '1938-09-01T00:00:00+00:00',
+          end: '1998-05-02T00:00:00+00:00',
         },
         {
           organization: {
-            name: "Hogwarts School of Witchcraft and Wizardry",
-            id: "1"
+            name: 'Hogwarts School of Witchcraft and Wizardry',
+            id: '1',
           },
-          start: "1938-09-01",
-          end: "1945-06-02T00:00:00+00:00"
-        }
-      ]
+          start: '1938-09-01',
+          end: '1945-06-02T00:00:00+00:00',
+        },
+      ],
     },
     isHighlighted: {
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 });
 
 export const Gravatar = () => ({
@@ -387,28 +387,28 @@ export const Gravatar = () => ({
   template: individualCardTemplate,
   props: {
     name: {
-      default: "Santiago Dueñas"
+      default: 'Santiago Dueñas',
     },
     sources: {
-      default: () => []
+      default: () => [],
     },
     isLocked: {
-      default: false
+      default: false,
     },
     uuid: {
-      default: "10f546"
+      default: '10f546',
     },
     email: {
-      default: "sduenas@bitergia.com"
+      default: 'sduenas@bitergia.com',
     },
     identities: {
-      default: () => []
+      default: () => [],
     },
     enrollments: {
-      default: () => []
+      default: () => [],
     },
     isHighlighted: {
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 });

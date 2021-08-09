@@ -38,9 +38,7 @@
         @updateOrganizations="updateOrganizations"
         @updateWorkspace="updateWorkspace"
         @highlight="highlightIndividual($event, 'highlightInWorkspace', true)"
-        @stopHighlight="
-          highlightIndividual($event, 'highlightInWorkspace', false)
-        "
+        @stopHighlight="highlightIndividual($event, 'highlightInWorkspace', false)"
         ref="table"
       />
       <organizations-table
@@ -51,6 +49,9 @@
         :add-domain="addDomain"
         :delete-domain="deleteDomain"
         :delete-organization="deleteOrganization"
+        :add-team="addTeam"
+        :delete-team="deleteTeam"
+        :fetch-teams="getTeamsPage"
         @getEnrollments="getEnrollments"
         @updateIndividuals="updateTable"
         @updateWorkspace="updateWorkspace"
@@ -69,8 +70,9 @@ import {
   getCountries,
   getIndividualByUuid,
   getPaginatedIndividuals,
-  getPaginatedOrganizations
-} from "../apollo/queries";
+  getPaginatedOrganizations,
+  getPaginatedTeams,
+} from '../apollo/queries';
 import {
   addIdentity,
   deleteIdentity,
@@ -82,24 +84,26 @@ import {
   deleteOrganization,
   addDomain,
   deleteDomain,
+  addTeam,
+  deleteTeam,
   updateProfile,
   lockIndividual,
   unlockIndividual,
   withdraw,
-  updateEnrollment
-} from "../apollo/mutations";
-import IndividualsTable from "../components/IndividualsTable";
-import OrganizationsTable from "../components/OrganizationsTable";
-import WorkSpace from "../components/WorkSpace";
-import { mapActions, mapGetters } from "vuex";
-import { formatIndividuals } from "../utils/actions";
+  updateEnrollment,
+} from '../apollo/mutations';
+import IndividualsTable from '../components/IndividualsTable';
+import OrganizationsTable from '../components/OrganizationsTable';
+import WorkSpace from '../components/WorkSpace';
+import { mapActions, mapGetters } from 'vuex';
+import { formatIndividuals } from '../utils/actions';
 
 export default {
-  name: "Dashboard",
+  name: 'Dashboard',
   components: {
     IndividualsTable,
     OrganizationsTable,
-    WorkSpace
+    WorkSpace,
   },
   data() {
     return {
@@ -107,35 +111,28 @@ export default {
       highlightInTable: undefined,
       highlightInWorkspace: undefined,
       savedIndividuals: [],
-      snackbar: false
+      snackbar: false,
     };
   },
   computed: {
-    ...mapGetters(["workspace"])
+    ...mapGetters(['workspace']),
   },
   methods: {
-    ...mapActions(["saveWorkspace", "emptyWorkspace"]),
+    ...mapActions(['saveWorkspace', 'emptyWorkspace']),
     async getIndividualsPage(page, items, filters, orderBy) {
-      const response = await getPaginatedIndividuals(
-        this.$apollo,
-        page,
-        items,
-        filters,
-        orderBy
-      );
+      const response = await getPaginatedIndividuals(this.$apollo, page, items, filters, orderBy);
       return response;
     },
     async getOrganizationsPage(page, items, filters) {
-      const response = await getPaginatedOrganizations(
-        this.$apollo,
-        page,
-        items,
-        filters
-      );
+      const response = await getPaginatedOrganizations(this.$apollo, page, items, filters);
+      return response;
+    },
+    async getTeamsPage(page, items, filters) {
+      const response = await getPaginatedTeams(this.$apollo, page, items, filters);
       return response;
     },
     addSavedIndividual(individual) {
-      const isSaved = this.savedIndividuals.find(savedIndividual => {
+      const isSaved = this.savedIndividuals.find((savedIndividual) => {
         return individual.uuid === savedIndividual.uuid;
       });
       if (isSaved) {
@@ -160,9 +157,9 @@ export default {
     },
     updateWorkspace(event) {
       if (event.remove) {
-        event.remove.forEach(removedItem => {
+        event.remove.forEach((removedItem) => {
           const removedIndex = this.savedIndividuals.findIndex(
-            individual => individual.uuid == removedItem
+            (individual) => individual.uuid == removedItem,
           );
           if (removedIndex !== -1) {
             this.savedIndividuals.splice(removedIndex, 1);
@@ -170,9 +167,9 @@ export default {
         });
       }
       if (event.update) {
-        event.update.forEach(updatedItem => {
+        event.update.forEach((updatedItem) => {
           const updatedIndex = this.savedIndividuals.findIndex(
-            individual => individual.uuid == updatedItem.uuid
+            (individual) => individual.uuid == updatedItem.uuid,
           );
           if (updatedIndex !== -1) {
             Object.assign(this.savedIndividuals[updatedIndex], updatedItem);
@@ -195,23 +192,11 @@ export default {
       this.$refs.table.deselectIndividuals();
     },
     async enroll(uuid, organization, fromDate, toDate) {
-      const response = await enroll(
-        this.$apollo,
-        uuid,
-        organization,
-        fromDate,
-        toDate
-      );
+      const response = await enroll(this.$apollo, uuid, organization, fromDate, toDate);
       return response;
     },
     async addIdentity(email, name, source, username) {
-      const response = await addIdentity(
-        this.$apollo,
-        email,
-        name,
-        source,
-        username
-      );
+      const response = await addIdentity(this.$apollo, email, name, source, username);
       return response;
     },
     async updateProfile(data, uuid) {
@@ -224,6 +209,14 @@ export default {
     },
     async deleteOrganization(organization) {
       const response = await deleteOrganization(this.$apollo, organization);
+      return response;
+    },
+    async addTeam(team, organization, parent) {
+      const response = await addTeam(this.$apollo, team, organization, parent);
+      return response;
+    },
+    async deleteTeam(team, organization) {
+      const response = await deleteTeam(this.$apollo, team, organization);
       return response;
     },
     async addDomain(domain, organization) {
@@ -247,13 +240,7 @@ export default {
       return response;
     },
     async withdraw(uuid, organization, fromDate, toDate) {
-      const response = await withdraw(
-        this.$apollo,
-        uuid,
-        organization,
-        fromDate,
-        toDate
-      );
+      const response = await withdraw(this.$apollo, uuid, organization, fromDate, toDate);
       return response;
     },
     async updateEnrollment(data) {
@@ -266,17 +253,17 @@ export default {
     },
     getEnrollments(organization) {
       this.filters = `enrollment:"${organization}"`;
-    }
+    },
   },
   async mounted() {
     if (this.workspace && this.workspace.length > 0) {
       const response = await Promise.all(
-        this.workspace.map(uuid => getIndividualByUuid(this.$apollo, uuid))
+        this.workspace.map((uuid) => getIndividualByUuid(this.$apollo, uuid)),
       );
-      const individuals = response.map(res => res.data.individuals.entities[0]);
+      const individuals = response.map((res) => res.data.individuals.entities[0]);
       this.savedIndividuals = formatIndividuals(individuals);
     }
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

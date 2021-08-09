@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 const GET_INDIVIDUAL_BYUUID = gql`
   query GetIndividual($uuid: String!) {
@@ -100,12 +100,7 @@ const GET_PAGINATED_INDIVIDUALS = gql`
     $filters: IdentityFilterType
     $orderBy: String
   ) {
-    individuals(
-      page: $page
-      pageSize: $pageSize
-      filters: $filters
-      orderBy: $orderBy
-    ) {
+    individuals(page: $page, pageSize: $pageSize, filters: $filters, orderBy: $orderBy) {
       entities {
         mk
         isLocked
@@ -146,11 +141,7 @@ const GET_PAGINATED_INDIVIDUALS = gql`
 `;
 
 const GET_PAGINATED_ORGANIZATIONS = gql`
-  query GetOrganizations(
-    $page: Int!
-    $pageSize: Int!
-    $filters: OrganizationFilterType
-  ) {
+  query GetOrganizations($page: Int!, $pageSize: Int!, $filters: OrganizationFilterType) {
     organizations(page: $page, pageSize: $pageSize, filters: $filters) {
       entities {
         id
@@ -187,11 +178,7 @@ const GET_COUNTRIES = gql`
 `;
 
 const GET_PAGINATED_TEAMS = gql`
-  query GetTeams(
-    $page: Int!
-    $pageSize: Int!
-    $filters: TeamFilterType
-  ) {
+  query GetTeams($page: Int!, $pageSize: Int!, $filters: TeamFilterType) {
     teams(page: $page, pageSize: $pageSize, filters: $filters) {
       entities {
         name
@@ -229,8 +216,8 @@ const getIndividualByUuid = (apollo, uuid) => {
   let response = apollo.query({
     query: GET_INDIVIDUAL_BYUUID,
     variables: {
-      uuid: uuid
-    }
+      uuid: uuid,
+    },
   });
   return response;
 };
@@ -248,8 +235,8 @@ const getIndividuals = {
       query: GET_INDIVIDUALS,
       variables: {
         page: self.currentPage,
-        pageSize: pageSize
-      }
+        pageSize: pageSize,
+      },
     });
     self.numPages = response.data.individuals.pageInfo.numPages;
     if (self.currentPage > self.numPages) {
@@ -257,25 +244,19 @@ const getIndividuals = {
     }
     self.currentPage++;
     return response;
-  }
+  },
 };
 
-const getPaginatedIndividuals = (
-  apollo,
-  currentPage,
-  pageSize,
-  filters,
-  orderBy
-) => {
+const getPaginatedIndividuals = (apollo, currentPage, pageSize, filters, orderBy) => {
   let response = apollo.query({
     query: GET_PAGINATED_INDIVIDUALS,
     variables: {
       page: currentPage,
       pageSize: pageSize,
       filters: filters,
-      orderBy: orderBy
+      orderBy: orderBy,
     },
-    fetchPolicy: "no-cache"
+    fetchPolicy: 'no-cache',
   });
   return response;
 };
@@ -284,8 +265,8 @@ const getProfileByUuid = (apollo, uuid) => {
   let response = apollo.query({
     query: GET_PROFILE_BYUUID,
     variables: {
-      uuid: uuid
-    }
+      uuid: uuid,
+    },
   });
   return response;
 };
@@ -296,16 +277,16 @@ const getPaginatedOrganizations = (apollo, currentPage, pageSize, filters) => {
     variables: {
       page: currentPage,
       pageSize: pageSize,
-      filters: filters
+      filters: filters,
     },
-    fetchPolicy: "no-cache"
+    fetchPolicy: 'no-cache',
   });
   return response;
 };
 
-const getCountries = apollo => {
+const getCountries = (apollo) => {
   let response = apollo.query({
-    query: GET_COUNTRIES
+    query: GET_COUNTRIES,
   });
   return response;
 };
@@ -315,8 +296,8 @@ const getJobs = (apollo, page, pageSize) => {
     query: GET_JOBS,
     variables: {
       page: page,
-      pageSize: pageSize
-    }
+      pageSize: pageSize,
+    },
   });
   return response;
 };
@@ -327,9 +308,9 @@ const getPaginatedTeams = (apollo, currentPage, pageSize, filters) => {
     variables: {
       page: currentPage,
       pageSize: pageSize,
-      filters: filters
+      filters: filters,
     },
-    fetchPolicy: "no-cache"
+    fetchPolicy: 'no-cache',
   });
   return response;
 };
@@ -342,5 +323,5 @@ export {
   getPaginatedIndividuals,
   getPaginatedOrganizations,
   getPaginatedTeams,
-  getJobs
+  getJobs,
 };

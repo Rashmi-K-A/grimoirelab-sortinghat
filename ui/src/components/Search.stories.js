@@ -1,8 +1,8 @@
-import Search from "./Search.vue";
+import Search from './Search.vue';
 
 export default {
-  title: "Search",
-  excludeStories: /.*Data$/
+  title: 'Search',
+  excludeStories: /.*Data$/,
 };
 
 const searchTemplate = `
@@ -21,8 +21,8 @@ export const Default = () => ({
   data: () => ({
     validFilters: [],
     filterSelector: false,
-    orderSelector: false
-  })
+    orderSelector: false,
+  }),
 });
 
 export const filterSelector = () => ({
@@ -31,17 +31,17 @@ export const filterSelector = () => ({
   data: () => ({
     validFilters: [
       {
-        filter: "country",
-        type: "string"
+        filter: 'country',
+        type: 'string',
       },
       {
-        filter: "isBot",
-        type: "boolean"
-      }
+        filter: 'isBot',
+        type: 'boolean',
+      },
     ],
     filterSelector: true,
-    orderSelector: false
-  })
+    orderSelector: false,
+  }),
 });
 
 export const orderSelector = () => ({
@@ -50,6 +50,6 @@ export const orderSelector = () => ({
   data: () => ({
     orderSelector: true,
     validFilters: [],
-    filterSelector: false
-  })
+    filterSelector: false,
+  }),
 });

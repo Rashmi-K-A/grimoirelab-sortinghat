@@ -27,9 +27,7 @@
         class="mt-0"
         :indeterminate="isIndeterminate"
         :label="
-          selectedIndividuals.length === 0
-            ? 'Select all'
-            : `${selectedIndividuals.length} selected`
+          selectedIndividuals.length === 0 ? 'Select all' : `${selectedIndividuals.length} selected`
         "
         @change="selectAll($event)"
       >
@@ -42,16 +40,16 @@
         :order-options="[
           {
             text: 'Last updated',
-            value: 'lastModified'
+            value: 'lastModified',
           },
           {
             text: 'Created date',
-            value: 'createdAt'
+            value: 'createdAt',
           },
           {
             text: 'Name',
-            value: 'profile__name'
-          }
+            value: 'profile__name',
+          },
         ]"
         :set-filters="setFilters"
       />
@@ -183,11 +181,7 @@
             <h6 class="subheader">Enrollment dates (optional)</h6>
             <v-row>
               <v-col cols="6">
-                <date-input
-                  v-model="dialog.dateFrom"
-                  label="Date from"
-                  outlined
-                />
+                <date-input v-model="dialog.dateFrom" label="Date from" outlined />
               </v-col>
               <v-col cols="6">
                 <date-input v-model="dialog.dateTo" label="Date to" outlined />
@@ -226,223 +220,193 @@
       <v-card-subtitle>
         Moving
         {{ this.selectedIndividuals.length }}
-        {{ this.selectedIndividuals.length > 1 ? "individuals" : "individual" }}
+        {{ this.selectedIndividuals.length > 1 ? 'individuals' : 'individual' }}
       </v-card-subtitle>
     </v-card>
   </section>
 </template>
 
 <script>
-import {
-  mergeIndividuals,
-  moveIdentity,
-  formatIndividuals
-} from "../utils/actions";
-import { enrollMixin } from "../mixins/enroll";
-import IndividualEntry from "./IndividualEntry.vue";
-import ExpandedIndividual from "./ExpandedIndividual.vue";
-import ProfileModal from "./ProfileModal.vue";
-import Search from "./Search.vue";
+import { mergeIndividuals, moveIdentity, formatIndividuals } from '../utils/actions';
+import { enrollMixin } from '../mixins/enroll';
+import IndividualEntry from './IndividualEntry.vue';
+import ExpandedIndividual from './ExpandedIndividual.vue';
+import ProfileModal from './ProfileModal.vue';
+import Search from './Search.vue';
 
 export default {
-  name: "IndividualsTable",
+  name: 'IndividualsTable',
   components: {
     IndividualEntry,
     ExpandedIndividual,
     ProfileModal,
-    Search
+    Search,
   },
   mixins: [enrollMixin],
   props: {
     fetchPage: {
       type: Function,
-      required: true
+      required: true,
     },
     deleteItem: {
       type: Function,
-      required: true
+      required: true,
     },
     mergeItems: {
       type: Function,
-      required: true
+      required: true,
     },
     unmergeItems: {
       type: Function,
-      required: true
+      required: true,
     },
     highlightIndividual: {
       type: String,
-      required: false
+      required: false,
     },
     moveItem: {
       type: Function,
-      required: true
+      required: true,
     },
     addIdentity: {
       type: Function,
-      required: true
+      required: true,
     },
     updateProfile: {
       type: Function,
-      required: true
+      required: true,
     },
     enroll: {
       type: Function,
-      required: true
+      required: true,
     },
     getCountries: {
       type: Function,
-      required: true
+      required: true,
     },
     lockIndividual: {
       type: Function,
-      required: true
+      required: true,
     },
     unlockIndividual: {
       type: Function,
-      required: true
+      required: true,
     },
     updateEnrollment: {
       type: Function,
-      required: true
+      required: true,
     },
     withdraw: {
       type: Function,
-      required: true
+      required: true,
     },
     setFilters: {
       type: String,
-      required: false
-    }
+      required: false,
+    },
   },
   data() {
     return {
       filters: {},
-      headers: [
-        { value: "name" },
-        { value: "email" },
-        { value: "sources" },
-        { value: "actions" }
-      ],
+      headers: [{ value: 'name' }, { value: 'email' }, { value: 'sources' }, { value: 'actions' }],
       individuals: [],
       expandedItems: [],
       pageCount: 0,
       page: 0,
       dialog: {
         open: false,
-        title: "",
-        text: "",
-        action: "",
+        title: '',
+        text: '',
+        action: '',
         showDates: false,
         dateFrom: null,
-        dateTo: null
+        dateTo: null,
       },
       openModal: false,
       totalResults: 0,
       itemsPerPage: 10,
       allSelected: false,
-      orderBy: null
+      orderBy: null,
     };
   },
   computed: {
     disabledActions() {
-      return (
-        this.selectedIndividuals.filter(individual => !individual.isLocked)
-          .length === 0
-      );
+      return this.selectedIndividuals.filter((individual) => !individual.isLocked).length === 0;
     },
     disabledMerge() {
-      return (
-        this.selectedIndividuals.filter(individual => !individual.isLocked)
-          .length < 2
-      );
+      return this.selectedIndividuals.filter((individual) => !individual.isLocked).length < 2;
     },
     selectedIndividuals() {
-      return this.individuals.filter(individual => individual.isSelected);
+      return this.individuals.filter((individual) => individual.isSelected);
     },
     isIndeterminate() {
       return (
         this.selectedIndividuals.length < this.individuals.length &&
         this.selectedIndividuals.length !== 0
       );
-    }
+    },
   },
   created() {
     this.queryIndividuals(1);
   },
   methods: {
-    async queryIndividuals(
-      page = this.page,
-      filters = this.filters,
-      orderBy = this.orderBy
-    ) {
+    async queryIndividuals(page = this.page, filters = this.filters, orderBy = this.orderBy) {
       if (this.disabledSearch) return;
-      let response = await this.fetchPage(
-        page,
-        this.itemsPerPage,
-        filters,
-        orderBy
-      );
+      let response = await this.fetchPage(page, this.itemsPerPage, filters, orderBy);
       if (response) {
-        this.individuals = formatIndividuals(
-          response.data.individuals.entities
-        );
+        this.individuals = formatIndividuals(response.data.individuals.entities);
         this.pageCount = response.data.individuals.pageInfo.numPages;
         this.page = response.data.individuals.pageInfo.page;
         this.totalResults = response.data.individuals.pageInfo.totalResults;
         this.allSelected = false;
-        this.$emit("updateIndividuals", this.individuals);
+        this.$emit('updateIndividuals', this.individuals);
       }
     },
     startDrag(item, event) {
       item.isSelected = true;
-      event.dataTransfer.dropEffect = "move";
-      event.dataTransfer.setData(
-        "individuals",
-        JSON.stringify(this.selectedIndividuals)
-      );
-      const dragImage = document.querySelector(".dragged-item");
+      event.dataTransfer.dropEffect = 'move';
+      event.dataTransfer.setData('individuals', JSON.stringify(this.selectedIndividuals));
+      const dragImage = document.querySelector('.dragged-item');
       event.dataTransfer.setDragImage(dragImage, 0, 0);
       const lockedIndividuals = this.selectedIndividuals.filter(
-        individual => individual.isLocked
+        (individual) => individual.isLocked,
       );
       if (lockedIndividuals.length === this.selectedIndividuals.length) {
-        event.dataTransfer.setData("lockActions", true);
+        event.dataTransfer.setData('lockActions', true);
       }
     },
     removeClass(item, event) {
-      event.target.classList.remove("dragging");
+      event.target.classList.remove('dragging');
     },
     selectIndividual(individual) {
       individual.isSelected = !individual.isSelected;
-      this.allSelected =
-        this.selectedIndividuals.length === this.individuals.length;
+      this.allSelected = this.selectedIndividuals.length === this.individuals.length;
     },
     deselectIndividuals() {
-      this.individuals.forEach(individual => (individual.isSelected = false));
+      this.individuals.forEach((individual) => (individual.isSelected = false));
       this.allSelected = false;
     },
     async deleteIndividuals(individuals) {
       const response = await Promise.all(
-        individuals.map(individual => this.deleteItem(individual.uuid))
+        individuals.map((individual) => this.deleteItem(individual.uuid)),
       );
       if (response) {
         this.$logger.debug(
-          "Deleted individuals",
-          individuals.map(individual => individual.uuid)
+          'Deleted individuals',
+          individuals.map((individual) => individual.uuid),
         );
         this.queryIndividuals(this.page);
         this.dialog.open = false;
       }
     },
     confirmDelete(individuals) {
-      individuals = individuals.filter(individual => !individual.isLocked);
-      const names = individuals.map(individual => individual.name).join(", ");
+      individuals = individuals.filter((individual) => !individual.isLocked);
+      const names = individuals.map((individual) => individual.name).join(', ');
       Object.assign(this.dialog, {
         open: true,
-        title: "Delete the selected items?",
+        title: 'Delete the selected items?',
         text: names,
-        action: () => this.deleteIndividuals(individuals)
+        action: () => this.deleteIndividuals(individuals),
       });
     },
     async merge(fromUuids, toUuid) {
@@ -451,22 +415,22 @@ export default {
         if (response) {
           this.queryIndividuals(this.page);
           this.dialog.open = false;
-          this.$emit("updateWorkspace", {
+          this.$emit('updateWorkspace', {
             update: formatIndividuals([response.data.merge.individual]),
-            remove: fromUuids
+            remove: fromUuids,
           });
-          this.$logger.debug("Merged individuals", { fromUuids, toUuid });
+          this.$logger.debug('Merged individuals', { fromUuids, toUuid });
         }
       } catch (error) {
         Object.assign(this.dialog, {
           open: true,
-          title: "Error",
+          title: 'Error',
           text: this.$getErrorMessage(error),
-          action: null
+          action: null,
         });
         this.$logger.error(`Error merging individuals: ${error}`, {
           fromUuids,
-          toUuid
+          toUuid,
         });
       }
     },
@@ -479,19 +443,17 @@ export default {
       try {
         const response = await this.unmergeItems(uuids);
         if (response && response.data) {
-          const unmergedItems = formatIndividuals(
-            response.data.unmergeIdentities.individuals
-          );
-          this.$emit("saveIndividual", unmergedItems[0]);
+          const unmergedItems = formatIndividuals(response.data.unmergeIdentities.individuals);
+          this.$emit('saveIndividual', unmergedItems[0]);
           this.queryIndividuals(this.page);
-          this.$logger.debug("Unmerged individuals", uuids);
+          this.$logger.debug('Unmerged individuals', uuids);
         }
       } catch (error) {
         Object.assign(this.dialog, {
           open: true,
-          title: "Error",
+          title: 'Error',
           text: this.$getErrorMessage(error),
-          action: null
+          action: null,
         });
         this.$logger.error(`Error unmerging individuals ${uuids}: ${error}`);
       }
@@ -505,17 +467,17 @@ export default {
         const response = await this.moveItem(fromUuid, toUuid);
         if (response) {
           this.queryIndividuals(this.page);
-          this.$emit("updateWorkspace", {
-            update: formatIndividuals([response.data.moveIdentity.individual])
+          this.$emit('updateWorkspace', {
+            update: formatIndividuals([response.data.moveIdentity.individual]),
           });
-          this.$logger.debug("Moved identity", { fromUuid, toUuid });
+          this.$logger.debug('Moved identity', { fromUuid, toUuid });
         }
       } catch (error) {
         Object.assign(this.dialog, {
           open: true,
-          title: "Error",
+          title: 'Error',
           text: this.$getErrorMessage(error),
-          action: null
+          action: null,
         });
         this.$logger.error(`Error moving ${fromUuid} to ${toUuid}: ${error}`);
       }
@@ -525,17 +487,17 @@ export default {
         const response = await this.updateProfile(data, uuid);
         if (response && response.data.updateProfile) {
           this.queryIndividuals();
-          this.$emit("updateWorkspace", {
-            update: formatIndividuals([response.data.updateProfile.individual])
+          this.$emit('updateWorkspace', {
+            update: formatIndividuals([response.data.updateProfile.individual]),
           });
           this.$logger.debug(`Updated profile ${uuid}`, data);
         }
       } catch (error) {
         Object.assign(this.dialog, {
           open: true,
-          title: "Error",
+          title: 'Error',
           text: this.$getErrorMessage(error),
-          action: null
+          action: null,
         });
         this.$logger.error(`Error updating profile: ${error}`, data);
       }
@@ -551,9 +513,9 @@ export default {
         } catch (error) {
           Object.assign(this.dialog, {
             open: true,
-            title: "Error",
+            title: 'Error',
             text: this.$getErrorMessage(error),
-            action: null
+            action: null,
           });
           this.$logger.error(`Error locking individual ${uuid}: ${error}`);
         }
@@ -567,9 +529,9 @@ export default {
         } catch (error) {
           Object.assign(this.dialog, {
             open: true,
-            title: "Error",
+            title: 'Error',
             text: this.$getErrorMessage(error),
-            action: null
+            action: null,
           });
           this.$logger.error(`Error unlocking individual ${uuid}: ${error}`);
         }
@@ -581,25 +543,25 @@ export default {
           uuid,
           organization.name,
           organization.fromDate,
-          organization.toDate
+          organization.toDate,
         );
         if (response && response.data.withdraw) {
           this.queryIndividuals();
-          this.$emit("updateWorkspace", {
-            update: formatIndividuals([response.data.withdraw.individual])
+          this.$emit('updateWorkspace', {
+            update: formatIndividuals([response.data.withdraw.individual]),
           });
-          this.$logger.debug("Removed affiliation", { uuid, ...organization });
+          this.$logger.debug('Removed affiliation', { uuid, ...organization });
         }
       } catch (error) {
         Object.assign(this.dialog, {
           open: true,
-          title: "Error",
+          title: 'Error',
           text: this.$getErrorMessage(error),
-          action: null
+          action: null,
         });
         this.$logger.error(`Error removing affiliation: ${error}`, {
           uuid,
-          ...organization
+          ...organization,
         });
       }
     },
@@ -607,20 +569,18 @@ export default {
       try {
         const response = await this.updateEnrollment(data);
         if (response && response.data.updateEnrollment) {
-          this.$emit("updateWorkspace", {
-            update: formatIndividuals([
-              response.data.updateEnrollment.individual
-            ])
+          this.$emit('updateWorkspace', {
+            update: formatIndividuals([response.data.updateEnrollment.individual]),
           });
           this.queryIndividuals();
-          this.$logger.debug("Updated enrollment", data);
+          this.$logger.debug('Updated enrollment', data);
         }
       } catch (error) {
         Object.assign(this.dialog, {
           open: true,
-          title: "Error",
+          title: 'Error',
           text: this.$getErrorMessage(error),
-          action: null
+          action: null,
         });
         this.$logger.error(`Error updating enrollment: ${error}`, data);
       }
@@ -631,7 +591,7 @@ export default {
       this.queryIndividuals(1);
     },
     selectAll(value) {
-      this.individuals.forEach(individual => (individual.isSelected = value));
+      this.individuals.forEach((individual) => (individual.isSelected = value));
     },
     changeItemsPerPage(value) {
       if (value) {
@@ -642,19 +602,19 @@ export default {
     closeDialog() {
       Object.assign(this.dialog, {
         open: false,
-        title: "",
-        text: "",
-        action: "",
+        title: '',
+        text: '',
+        action: '',
         showDates: false,
         dateFrom: null,
-        dateTo: null
+        dateTo: null,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-@import "../styles/index.scss";
+@import '../styles/index.scss';
 ::v-deep .v-data-table__wrapper {
   overflow-x: hidden;
 }

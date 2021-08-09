@@ -23,24 +23,13 @@
       <template v-slot:prepend v-if="filterSelector">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              class="text-body-1"
-              depressed
-              color="white"
-              height="30"
-              v-bind="attrs"
-              v-on="on"
-            >
+            <v-btn class="text-body-1" depressed color="white" height="30" v-bind="attrs" v-on="on">
               Filters
               <v-icon small right>mdi-menu-down</v-icon>
             </v-btn>
           </template>
           <v-list dense class="mt-1">
-            <v-list-item
-              v-for="(item, i) in validFilters"
-              :key="i"
-              @click="setFilter(item)"
-            >
+            <v-list-item v-for="(item, i) in validFilters" :key="i" @click="setFilter(item)">
               <v-list-item-title>
                 {{ item.filter }}
               </v-list-item-title>
@@ -82,17 +71,11 @@
               @click="changeOrder"
             >
               <v-icon small>
-                {{
-                  order.descending
-                    ? "mdi-sort-descending"
-                    : "mdi-sort-ascending"
-                }}
+                {{ order.descending ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}
               </v-icon>
             </v-btn>
           </template>
-          <span>
-            {{ order.descending ? "Descending " : "Ascending " }} order
-          </span>
+          <span> {{ order.descending ? 'Descending ' : 'Ascending ' }} order </span>
         </v-tooltip>
       </template>
     </v-select>
@@ -101,86 +84,86 @@
 
 <script>
 export default {
-  name: "Search",
+  name: 'Search',
   props: {
     filterSelector: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     orderSelector: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     setFilters: {
       type: String,
-      required: false
+      required: false,
     },
     validFilters: {
       type: Array,
       required: false,
       default: () => [
         {
-          filter: "country",
-          type: "string"
+          filter: 'country',
+          type: 'string',
         },
         {
-          filter: "isBot",
-          type: "boolean"
+          filter: 'isBot',
+          type: 'boolean',
         },
         {
-          filter: "isLocked",
-          type: "boolean"
+          filter: 'isLocked',
+          type: 'boolean',
         },
         {
-          filter: "gender",
-          type: "string"
+          filter: 'gender',
+          type: 'string',
         },
         {
-          filter: "lastUpdated",
-          type: "date"
+          filter: 'lastUpdated',
+          type: 'date',
         },
         {
-          filter: "source",
-          type: "string"
+          filter: 'source',
+          type: 'string',
         },
         {
-          filter: "enrollment",
-          type: "string"
+          filter: 'enrollment',
+          type: 'string',
         },
         {
-          filter: "enrollmentDate",
-          type: "date"
+          filter: 'enrollmentDate',
+          type: 'date',
         },
         {
-          filter: "isEnrolled",
-          type: "boolean"
-        }
-      ]
+          filter: 'isEnrolled',
+          type: 'boolean',
+        },
+      ],
     },
     orderOptions: {
       type: Array,
       required: false,
       default: () => [
         {
-          text: "Last updated",
-          value: "lastModified"
-        }
-      ]
-    }
+          text: 'Last updated',
+          value: 'lastModified',
+        },
+      ],
+    },
   },
   data() {
     return {
-      inputValue: "",
+      inputValue: '',
       filters: {},
       isFocused: false,
       errorMessage: undefined,
       dialog: false,
       order: {
         value: undefined,
-        descending: true
-      }
+        descending: true,
+      },
     };
   },
   methods: {
@@ -188,7 +171,7 @@ export default {
       this.parseFilters();
       if (this.errorMessage) return;
       const order = this.getOrder();
-      this.$emit("search", this.filters, order);
+      this.$emit('search', this.filters, order);
     },
     parseFilters() {
       const terms = [];
@@ -198,12 +181,12 @@ export default {
       if (!this.inputValue) return;
 
       const input = this.parseQuotes(this.inputValue);
-      input.split(" ").forEach(value => {
-        if (value.includes(":")) {
-          const [filter, text] = value.split(":");
+      input.split(' ').forEach((value) => {
+        if (value.includes(':')) {
+          const [filter, text] = value.split(':');
           if (
             this.validFilters.length === 0 ||
-            !this.validFilters.find(vfilter => vfilter.filter === filter)
+            !this.validFilters.find((vfilter) => vfilter.filter === filter)
           ) {
             this.errorMessage = `Invalid filter "${filter}"`;
           } else if (this.isDateFilter(filter)) {
@@ -219,51 +202,47 @@ export default {
       });
 
       if (terms.length > 0) {
-        this.filters.term = terms.join(" ").trim();
+        this.filters.term = terms.join(' ').trim();
       }
     },
     parseDateFilter(inputValue, filter) {
-      const operator = ["<=", ">=", "<", ">", ".."].find(value =>
-        inputValue.includes(value)
-      );
+      const operator = ['<=', '>=', '<', '>', '..'].find((value) => inputValue.includes(value));
 
       if (!operator) {
-        return (this.errorMessage = "Invalid operator");
+        return (this.errorMessage = 'Invalid operator');
       }
 
-      const values = inputValue.replace(operator, ` ${operator} `).split(" ");
+      const values = inputValue.replace(operator, ` ${operator} `).split(' ');
 
       try {
         this.filters[filter] = values
-          .map(value => {
+          .map((value) => {
             if (value) {
-              return value === operator
-                ? operator
-                : new Date(value).toISOString();
+              return value === operator ? operator : new Date(value).toISOString();
             }
           })
-          .join("");
+          .join('');
       } catch (error) {
-        this.errorMessage = "Invalid date";
+        this.errorMessage = 'Invalid date';
       }
     },
     parseBooleanFilter(filter, value) {
-      if (value === "true") {
+      if (value === 'true') {
         this.filters[filter] = true;
-      } else if (value === "false") {
+      } else if (value === 'false') {
         this.filters[filter] = false;
       } else {
-        this.errorMessage = "Accepted values are true and false";
+        this.errorMessage = 'Accepted values are true and false';
       }
     },
     parseQuotes(input) {
       const regexp = /(\w*):"(.*?)"/gm;
       const matches = [...input.matchAll(regexp)];
 
-      matches.forEach(match => {
+      matches.forEach((match) => {
         const filter = match[1];
         const value = match[2];
-        if (this.validFilters.find(vfilter => vfilter.filter === filter)) {
+        if (this.validFilters.find((vfilter) => vfilter.filter === filter)) {
           if (this.isDateFilter(filter)) {
             this.parseDateFilter(value, filter);
           } else if (this.isBooleanFilter(filter)) {
@@ -271,7 +250,7 @@ export default {
           } else {
             this.filters[filter] = value;
           }
-          input = input.replace(match[0], "");
+          input = input.replace(match[0], '');
         } else {
           this.errorMessage = `Invalid filter "${filter}"`;
         }
@@ -281,29 +260,23 @@ export default {
     },
     clear() {
       const order = this.getOrder();
-      this.inputValue = "";
+      this.inputValue = '';
       this.filters = {};
       this.errorMessage = undefined;
-      this.$emit("search", {}, order);
+      this.$emit('search', {}, order);
     },
     isBooleanFilter(filter) {
-      const validFilter = this.validFilters.find(
-        vfilter => vfilter.filter === filter
-      );
-      return validFilter.type === "boolean";
+      const validFilter = this.validFilters.find((vfilter) => vfilter.filter === filter);
+      return validFilter.type === 'boolean';
     },
     isDateFilter(filter) {
-      const validFilter = this.validFilters.find(
-        vfilter => vfilter.filter === filter
-      );
-      return validFilter.type === "date";
+      const validFilter = this.validFilters.find((vfilter) => vfilter.filter === filter);
+      return validFilter.type === 'date';
     },
     setFilter(item) {
-      this.inputValue = this.inputValue || "";
+      this.inputValue = this.inputValue || '';
       if (this.isDateFilter(item.filter)) {
-        const [month, day, year] = new Date()
-          .toLocaleDateString("en-US")
-          .split("/");
+        const [month, day, year] = new Date().toLocaleDateString('en-US').split('/');
         this.inputValue += `${item.filter}:>=${year}-${month}-${day} `;
       } else if (this.isBooleanFilter(item.filter)) {
         this.inputValue += `${item.filter}:true `;
@@ -314,7 +287,7 @@ export default {
     getOrder() {
       let order;
       if (this.order.value) {
-        order = `${this.order.descending ? "-" : ""}${this.order.value}`;
+        order = `${this.order.descending ? '-' : ''}${this.order.value}`;
       }
       return order;
     },
@@ -323,14 +296,14 @@ export default {
       if (this.order.value) {
         this.search();
       }
-    }
+    },
   },
   watch: {
     setFilters(value) {
       this.inputValue = value;
       this.search();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
